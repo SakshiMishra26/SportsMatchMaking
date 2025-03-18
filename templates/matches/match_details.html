@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sportz — Match Details</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- AOS CSS (for animations) -->
+    <link rel="stylesheet" href="{% static 'aos.css' %}">
+    <!-- Custom Styles -->
+    <style>
+        /* Gradient Background for Page */
+        body {
+            background: linear-gradient(135deg, #1e3a8a, #1e40af); /* Dark blue gradient background */
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Mukta', sans-serif;
+            color: #fff;
+            font-weight: 300;
+            font-size: 1.1rem;
+        }
+        /* Content Padding to Avoid Navbar Overlap */
+        .content {
+            padding-top: 80px; /* Adjust based on navbar height */
+        }
+        /* Modern Card Design */
+        .match-card {
+            background: #ffffff; /* White background for contrast */
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Stronger shadow for depth */
+            padding: 2.5rem;
+            transition: all 0.3s ease-in-out;
+        }
+        .match-card:hover {
+            transform: translateY(-8px); /* Lift effect on hover */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+        /* Gradient Heading Underline */
+        .match-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+        .match-title::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            bottom: -8px;
+            left: 0;
+            background: linear-gradient(90deg, #14b8a6, #22d3ee); /* Teal to Cyan gradient */
+            border-radius: 2px;
+        }
+        /* Gradient Button */
+        .btn-gradient {
+            background: linear-gradient(90deg, #14b8a6, #22d3ee); /* Teal to Cyan gradient */
+            color: #fff;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px; /* More rounded button */
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease-in-out;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(90deg, #0f766e, #06b6d4); /* Darker gradient on hover */
+            transform: scale(1.05); /* Slight scale on hover */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        /* Secondary Button for Back to Matches */
+        .btn-secondary-gradient {
+            background: linear-gradient(90deg, #6b7280, #9ca3af); /* Gray gradient for secondary button */
+            color: #fff;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease-in-out;
+        }
+        .btn-secondary-gradient:hover {
+            background: linear-gradient(90deg, #4b5563, #6b7280); /* Darker gray on hover */
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        /* List Styling for Players */
+        .player-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .player-list li {
+            background: #f3f4f6; /* Light gray background for list items */
+            color: #1f2937; /* Dark gray text */
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 0.75rem;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+        }
+        .player-list li:hover {
+            background: #e5e7eb; /* Slightly darker gray on hover */
+            transform: translateX(5px); /* Slide effect on hover */
+        }
+        /* Text Colors */
+        .text-primary {
+            color: #1f2937; /* Dark gray for contrast on white card */
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .match-card {
+                padding: 1.5rem;
+            }
+            .btn-gradient, .btn-secondary-gradient {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-wrap">
+        <!-- Include Navbar -->
+        {% include "navbar.html" %}
+
+        <!-- Match Details Section -->
+        <div class="content">
+            <div class="container mx-auto px-4 py-12" data-aos="fade-up" data-aos-duration="800">
+                <div class="match-card">
+                    <h2 class="match-title text-4xl font-bold text-primary">{{ match.sport_type }} Match Details</h2>
+
+                    <div class="space-y-5">
+                        <p class="text-lg text-primary"><strong class="font-semibold">Location:</strong> {{ match.location }}</p>
+                        <p class="text-lg text-primary"><strong class="font-semibold">Date & Time:</strong> {{ match.date_time }}</p>
+                        <p class="text-lg text-primary"><strong class="font-semibold">Skill Level:</strong> {{ match.skill_level }}</p>
+                        <p class="text-lg text-primary"><strong class="font-semibold">Players Needed:</strong> {{ match.players_remaining }} / {{ match.players_needed }}</p>
+
+                        {% if match.accepted_by.count > 0 %}
+                            <div>
+                                <h3 class="text-2xl font-semibold mb-3 text-primary">Players Joined:</h3>
+                                <ul class="player-list">
+                                    {% for player in match.accepted_by.all %}
+                                        <li>{{ player.username }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% else %}
+                            <p class="text-lg text-gray-600">No players have joined yet.</p>
+                        {% endif %}
+
+                        <div class="mt-8 flex justify-center space-x-4">
+                            <a href="{% url 'accept_match' match.id %}" class="btn-gradient">Accept</a>
+                            <a href="{% url 'match_list' %}" class="btn-secondary-gradient">Back to Matches</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS (for animations) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>

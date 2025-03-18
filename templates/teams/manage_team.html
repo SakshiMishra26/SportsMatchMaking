@@ -1,0 +1,24 @@
+{% include "navbar.html" %}
+{% block content %}
+<div class="site-blocks-vs site-section bg-light">
+    <div class="container">
+
+      <div class="border mb-3 rounded d-block d-lg-flex align-items-center p-3 next-match">
+        
+        <div class="mr-auto order-md-1 w-60 text-center text-lg-left mb-3 mb-lg-0">
+        
+<h2>Manage Team: {{ team.name }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Update Team</button>
+</form>
+<br><br>
+
+<a href="{% url 'team_list' %}" class="btn btn-secondary">Back to Teams</a>
+{% endblock %}
+</div>
+</div>
+</div>
+</div>

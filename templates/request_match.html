@@ -1,0 +1,9 @@
+<!-- request_match.html -->
+
+  <h1>Request a Match</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Request</button>
+  </form>
+

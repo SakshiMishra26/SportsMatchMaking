@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/Reg.css' %}">
+    <title>Registration Form</title>
+</head>
+
+<body>
+    {% if messages %}
+    <script>
+        window.onload = function() {
+            {% for message in messages %}
+                alert("{{ message }}");  // Show popup for each error
+            {% endfor %}
+        };
+    </script>
+{% endif %}
+<div class="div1">
+    <div class="form-box">
+        <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="login()">Log In</button>
+            <button type="button" class="toggle-btn" onclick="register()">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login" class="input-group" method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="text" class="input-field" name="username" placeholder="User ID" required>
+            <input type="password" class="input-field" name="password" placeholder="Password" required>
+            <input type="checkbox" class="check-box"> <span>Remember Password</span>
+            <button type="submit" class="submit-btn">Log in</button>
+
+            <p><a href="/accounts/password-reset/">Forgot Password?</a></p>
+
+        </form>
+
+        <!-- Registration Form (Initially Hidden) -->
+        <form id="register" class="input-group" method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
+            <input type="email" class="input-field" name="email" id="email" placeholder="Enter Email" required>
+            <button type="button" id="send-otp-btn" class="submit-btn" onclick="sendOTP()">Send OTP</button>
+            {% if otp_sent %}
+            <input type="text" class="input-field" name="otp" id="otp" placeholder="Enter OTP" required>
+            {% endif %}
+                        <input type="text" class="input-field" name="username" placeholder="User ID" required>
+            <input type="password" class="input-field" name="password1" placeholder="Password" required>
+            <input type="password" class="input-field" name="password2" placeholder="Confirm Password" required>
+            <input type="text" class="input-field" name="location" placeholder="Location" required>
+            <input type="text" class="input-field" name="sports" placeholder="Sports (e.g., Football, Basketball)" required>
+            <label>Skill Level</label><br><br>
+            <select name="skill_level" required>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+            <button type="submit" class="submit-btn">Register</button>
+        </form>
+    </div>
+</div>
+    <script>
+        var x = document.getElementById("login");
+        var y = document.getElementById("register");
+        var z = document.getElementById("btn");
+    
+       
+        {% comment %} function register(){
+            x.style.left = "-400px";
+            y.style.left = "50px";
+            z.style.left = "110px";
+            y.style.opacity = "1";  // Ensure visibility
+        }
+        function login(){
+            x.style.left = "50px";
+            y.style.left = "450px";
+            z.style.left = "0px";
+            y.style.opacity = "0";  // Hide register form when switching
+        } {% endcomment %}
+
+        function register() {
+            document.getElementById("login").style.display = "none";  // Hide login form
+            document.getElementById("register").style.display = "block"; // Show register form
+            document.getElementById("register").style.opacity = "1"; // Make it visible
+        }
+        
+        function login() {
+            document.getElementById("register").style.display = "none"; // Hide register form
+            document.getElementById("login").style.display = "block"; // Show login form
+        }
+        {% comment %} function register() {
+            loginForm.style.opacity = "0"; // Hide login form
+            registerForm.style.opacity = "1"; // Show register form
+            registerForm.style.left = "50px";
+            loginForm.style.left = "-400px";
+            btn.style.left = "110px";
+        }
+    
+        function login() {
+            loginForm.style.opacity = "1"; // Show login form
+            registerForm.style.opacity = "0"; // Hide register form
+            loginForm.style.left = "50px";
+            registerForm.style.left = "450px";
+            btn.style.left = "0px";
+        } {% endcomment %}
+       
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("register-form").addEventListener("submit", function (event) {
+                    var password = document.getElementById("password1").value;
+                    var confirmPassword = document.getElementById("password2").value;
+        
+                    if (password.length < 8) {
+                        alert("Password must be at least 8 characters long.");
+                        event.preventDefault(); // Stop form submission
+                    } else if (!/[A-Z]/.test(password)) {
+                        alert("Password must contain at least one uppercase letter.");
+                        event.preventDefault();
+                    } else if (!/\d/.test(password)) {
+                        alert("Password must contain at least one number.");
+                        event.preventDefault();
+                    } else if (password !== confirmPassword) {
+                        alert("Passwords do not match.");
+                        event.preventDefault();
+                    }
+                });
+            });
+            {% comment %} function sendOTP() {
+                var email = document.getElementById("email").value;
+                if (!email.includes("@")) {
+                    alert("Please enter a valid email address.");
+                    return;
+                }
+        
+                // Show OTP field after clicking Send OTP
+                document.getElementById("otp").style.display = "block";
+        
+                // Create a hidden input to send OTP request
+                var form = document.getElementById("register-form");
+                var otpRequest = document.createElement("input");
+                otpRequest.type = "hidden";
+                otpRequest.name = "send_otp";
+                otpRequest.value = "true";
+                form.appendChild(otpRequest);
+        
+                form.submit();  // Submit form to send OTP
+            } {% endcomment %}
+
+            function sendOTP() {
+                var email = document.getElementById("email").value;
+                if (!email.includes("@")) {
+                    alert("Please enter a valid email address.");
+                    return;
+                }
+        
+                // Show OTP field after clicking Send OTP
+                document.getElementById("otp").style.display = "block";
+        
+                // Create a hidden input to send OTP request
+                var form = document.getElementById("register");
+                var otpRequest = document.createElement("input");
+                otpRequest.type = "hidden";
+                otpRequest.name = "send_otp";
+                otpRequest.value = "true";
+                form.appendChild(otpRequest);
+        
+                form.submit();  // Submit form to send OTP
+            }
+        
+    </script>
+    
+</body>
+
+</html>

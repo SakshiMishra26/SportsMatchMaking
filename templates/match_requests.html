@@ -1,0 +1,24 @@
+<!-- match_requests.html -->
+ {% extends 'navbar.html'%}
+ {% block content%}
+
+
+<div class="container-fluid" style="background-color: yellow; padding: 50px; border-radius: 10px;">
+
+ <h1 class="text-center" >Match Requests</h1>
+ {% comment %} <div class="container" style="background-color: yellow; padding: 30px; border-radius: 10px;"> {% endcomment %}
+   <ul>
+     {% for match in match_requests %}
+       <li>
+         <strong>{{ match.user.username }}</strong> has requested a match at 
+         <strong>{{ match.location }}</strong> on <strong>{{ match.date }}</strong> at 
+         <strong>{{ match.time }}</strong> with a team size of <strong>{{ match.team_size }}</strong>.
+       </li>
+     {% empty %}
+       <li>No match requests available.</li>
+     {% endfor %}
+   </ul>
+ </div>
+ {% endblock %}
+
+ 

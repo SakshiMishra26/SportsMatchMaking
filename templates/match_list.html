@@ -1,0 +1,12 @@
+<h2>Available Matches</h2>
+{% for match in matches %}
+    <p>{{ match.title }} - {{ match.location }} - {{ match.date }}</p>
+    {% if not match.requested_by %}
+        <a href="{% url 'request_match' match.id %}">Request Match</a>
+    {% elif match.requested_by == request.user and not match.accepted %}
+        <p>Waiting for approval...</p>
+    {% elif match.accepted %}
+        <p>Match accepted!</p>
+    {% endif %}
+{% endfor %}
+<a href="{% url 'logout' %}">Logout</a>
