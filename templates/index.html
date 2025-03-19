@@ -17,7 +17,7 @@
     <!-- Custom Styles -->
     <style>
         body {
-            background-image: url("{% static 'images/hero_bg_1.jpg' %}");
+            background-image: url("{% static 'images/about_2.jpg' %}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -27,6 +27,7 @@
             font-family: 'Mukta', sans-serif;
             font-weight: 300;
             font-size: 1.1rem;
+            backdrop-filter: blur(8px); /* Blur the background image */
             padding-top: 80px;
         }
         .navbar-custom {
@@ -75,7 +76,7 @@
             background: rgba(0, 0, 0, 0.5);
         }
         .card-custom {
-            background: linear-gradient(135deg, #2dd4bf, #3b82f6); /* Teal to blue gradient */
+            background: linear-gradient(135deg, #2dd4bf, #3b82f6);
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             overflow: hidden;
@@ -87,13 +88,34 @@
         }
         .card-body {
             padding: 1.5rem;
-            color: #ffffff; /* White text for contrast with gradient */
+            color: #ffffff;
         }
         .inner-card {
-            background: #ffffff; /* White inner card for content */
+            background: #ffffff;
             border-radius: 10px;
-            padding: 1rem;
-            color: #333; /* Dark text for readability */
+            padding: 2rem;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 350px; /* Increased height for better centering */
+        }
+        .highlight-title {
+            font-size: 2.1rem; /* Larger font size */
+            font-weight: bold;
+            background: linear-gradient(90deg, #14b8a6, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+        .inner-card p {
+            font-size: 1.25rem; /* Increased size for readability */
+            margin-bottom: 1rem;
         }
         .carousel-item {
             background: #ffffff;
@@ -162,6 +184,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'match_list' %}">Matches</a>
                         </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'create_match_request' %}">Match Request</a>
                         </li>
@@ -204,20 +227,132 @@
         </section>
 
         <!-- Notifications Section -->
-        <section class="py-12 bg-gray-800/50">
+        <section class="py-12 bg-gradient-to-br from-indigo-900/50 to-blue-500/50">
             <div class="container">
-                <h2 class="text-3xl font-bold text-center mb-6 text-white">Your Notifications</h2>
-                {% if notifications %}
-                    <ul class="list-disc list-inside text-white">
-                        {% for notification in notifications %}
-                            <li class="mb-2">{{ notification.message }} ({{ notification.created_at }})</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="text-center text-gray-300">No new notifications.</p>
-                {% endif %}
+                <h2 class="text-3xl font-bold text-center mb-8 text-white">Notifications</h2>
+                <div class="card-custom">
+                    <div class="card-body">
+                        {% if request.user.is_authenticated %}
+                            {% if notifications %}
+                                <ul class="list-group">
+                                    {% for notification in notifications %}
+                                        <li class="list-group-item bg-white text-secondary mb-2 rounded-lg shadow-md p-3 flex justify-between items-center">
+                                            <span>{{ notification.message }} - <small>{{ notification.created_at|date:"F d, Y H:i" }}</small></span>
+                                            <div>
+                                                <form method="POST" action="{% url 'mark_notification_read' notification.id %}" class="inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-sm btn-primary mr-2">Mark as Read</button>
+                                                </form>
+                                                <form method="POST" action="{% url 'delete_notification' notification.id %}" class="inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="inner-card text-center">
+                                    <p class="text-secondary">No new notifications available.</p>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="inner-card text-center">
+                                <p class="text-secondary">Please log in to view your notifications.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </section>
+
+<!-- About Us Section -->
+<section class="py-12 bg-gray-800/50 mt-12" data-aos="fade-up" data-aos-duration="800">
+    <div class="container">
+        <h2 class="text-3xl font-bold text-center mb-8 text-white highlight-title">About Local Sports Matchmaking</h2>
+        <div class="card-custom rounded-xl shadow-2xl overflow-hidden">
+            <div class="card-body p-6">
+                <!-- Accordion for Mission, Vision, and Team -->
+                <div class="accordion" id="aboutAccordion">
+                    <!-- Mission -->
+                    <div class="accordion-item bg-white rounded-lg mb-4 shadow-md">
+                        <h2 class="accordion-header" id="missionHeading">
+                            <button class="accordion-button bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center" type="button" data-bs-toggle="collapse" data-bs-target="#missionCollapse" aria-expanded="true" aria-controls="missionCollapse">
+                                <span>Our Mission</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </h2>
+                        <div id="missionCollapse" class="accordion-collapse collapse show" aria-labelledby="missionHeading" data-bs-parent="#aboutAccordion">
+                            <div class="accordion-body p-4 text-gray-700">
+                                <p>At Local Sports Matchmaking, we are dedicated to bringing sports enthusiasts together by connecting players, teams, and tournaments in their local communities. Our mission is to foster a vibrant, inclusive environment where everyone can enjoy the thrill of sports, from casual games to competitive events.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vision -->
+                    <div class="accordion-item bg-white rounded-lg mb-4 shadow-md">
+                        <h2 class="accordion-header" id="visionHeading">
+                            <button class="accordion-button bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#visionCollapse" aria-expanded="false" aria-controls="visionCollapse">
+                                <span>Our Vision</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </h2>
+                        <div id="visionCollapse" class="accordion-collapse collapse" aria-labelledby="visionHeading" data-bs-parent="#aboutAccordion">
+                            <div class="accordion-body p-4 text-gray-700">
+                                <p>We envision a world where local sports are accessible to all, breaking barriers and building stronger communities through the power of play. By leveraging technology, we aim to simplify matchmaking and elevate the sports experience for everyone.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team -->
+                    <div class="accordion-item bg-white rounded-lg shadow-md">
+                        <h2 class="accordion-header" id="teamHeading">
+                            <button class="accordion-button bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#teamCollapse" aria-expanded="false" aria-controls="teamCollapse">
+                                <span>Meet Our Team</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </h2>
+                        <div id="teamCollapse" class="accordion-collapse collapse" aria-labelledby="teamHeading" data-bs-parent="#aboutAccordion">
+                            <div class="accordion-body p-4 text-gray-700">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="text-center">
+                                        <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
+                                            <img src="{% static 'images/team1.jpg' %}" alt="John Doe" class="w-full h-full object-cover">
+                                        </div>
+                                        <h4 class="text-lg font-semibold">John Doe</h4>
+                                        <p class="text-sm text-gray-600">Founder & CEO</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
+                                            <img src="{% static 'images/team2.jpg' %}" alt="Jane Smith" class="w-full h-full object-cover">
+                                        </div>
+                                        <h4 class="text-lg font-semibold">Jane Smith</h4>
+                                        <p class="text-sm text-gray-600">Community Manager</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
+                                            <img src="{% static 'images/team3.jpg' %}" alt="Mike Johnson" class="w-full h-full object-cover">
+                                        </div>
+                                        <h4 class="text-lg font-semibold">Mike Johnson</h4>
+                                        <p class="text-sm text-gray-600">Tech Lead</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="text-center mt-6">
+                    <p class="text-white mb-4">Join us in building a stronger sports community!</p>
+                    <a href="{% url 'match_list' %}" class="btn btn-custom bg-gradient-to-r from-teal-400 to-cyan-500 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-gradient-to-r hover:from-teal-500 hover:to-cyan-600 hover:shadow-xl transition duration-300">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- Upcoming Matches Section -->
         <section class="py-12 bg-gray-800/50">
@@ -229,7 +364,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {% for match in matches %}
                                     <div class="inner-card p-4">
-                                        <h5 class="card-title text-xl font-semibold mb-2 text-teal-700">{{ match.sport_type }}</h5>
+                                        <h5 class="highlight-title text-center">{{ match.sport_type }}</h5>
                                         <p class="mb-2"><strong>📍 Location:</strong> {{ match.location }}</p>
                                         <p class="mb-2"><strong>📅 Date & Time:</strong> {{ match.date_time|date:"F d, Y H:i" }}</p>
                                         <p class="mb-2"><strong>🏅 Skill Level:</strong> {{ match.skill_level }}</p>
@@ -241,56 +376,53 @@
                             <div class="text-center mt-6">
                                 <a href="{% url 'match_list' %}" class="btn btn-primary btn-lg shadow-lg">View All Matches</a>
                             </div>
+                            {% if not user.is_authenticated %}
+                                <div class="text-center mt-6">
+                                    <a href="{% url 'login' %}" class="btn btn-danger btn-lg m-2 shadow-lg">Login to Join</a>
+                                    <a href="{% url 'register' %}" class="btn btn-secondary btn-lg m-2 shadow-lg">Register</a>
+                                </div>
+                            {% endif %}
                         {% else %}
                             <div class="inner-card text-center">
                                 <p class="text-gray-700">No upcoming matches found.</p>
                             </div>
                         {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Featured Tournaments Section -->
 
+<section class="py-12 bg-gray-800/50">
+    <div class="container">
+        <h2 class="text-3xl font-bold text-center mb-8 text-white">Featured Tournaments</h2>
+        <div class="card-custom">
+            <div class="card-body">
+                {% if tournaments %}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {% for tournament in tournaments|slice:":3" %}
+                            <div class="inner-card p-4">
+                                <h3 class="highlight-title text-center">{{ tournament.name }}</h3>
+                                <h5 class="highlight-title text-center">{{ tournament.sport_type }}</h5>
+                                <p class="mb-2"><strong>📍 Location:</strong> {{ tournament.location }}</p>
+                                <p class="mb-2"><strong>📅 Start Date:</strong> {{ tournament.start_date|date:"F d, Y" }}</p>
+                                <p class="mb-2"><strong>📅 End Date:</strong> {{ tournament.end_date|date:"F d, Y" }}</p>
+                                <p class="mb-2"><strong>🏆 Teams Participating:</strong> {{ tournament.teams.count }}</p>
+                            </div>
+                        {% endfor %}
                     </div>
                     <div class="text-center mt-6">
-                      <a href="{% url 'login' %}" class="btn btn-danger btn-lg m-2 shadow-lg">Login to Join</a>
-                      <a href="{% url 'register' %}" class="btn btn-secondary btn-lg m-2 shadow-lg">Register</a>
-                  </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured Tournaments Section -->
-        <section class="py-12 bg-gray-800/50">
-            <div class="container">
-                <h2 class="text-3xl font-bold text-center mb-8 text-white">Featured Tournaments</h2>
-                <div class="card-custom">
-                    <div class="card-body">
-                        {% if tournaments %}
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="text-center">
-                                    <img src="{% static 'images/img_1_sq.jpg' %}" alt="Tournament" class="rounded-lg shadow-lg mx-auto w-48 h-48 object-cover">
-                                    <h3 class="text-xl font-bold mt-4 text-teal-700">{{ tournaments.0.name }}</h3>
-                                    <p class="text-gray-700">{{ tournaments.0.sport_type }}</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="inner-card">
-                                        <p class="text-lg mb-2 text-gray-700"><strong>Location:</strong> {{ tournaments.0.location }}</p>
-                                        <p class="text-lg mb-2 text-gray-700"><strong>Start Date:</strong> {{ tournaments.0.start_date|date:"F d, Y" }}</p>
-                                        <p class="text-lg mb-2 text-gray-700"><strong>End Date:</strong> {{ tournaments.0.end_date|date:"F d, Y" }}</p>
-                                        <p class="text-lg mb-2 text-gray-700"><strong>Teams Participating:</strong> {{ tournaments.0.teams.count }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-center mt-6">
-                                <a href="{% url 'tournament_list' %}" class="btn btn-primary btn-lg shadow-lg">View All Tournaments</a>
-                            </div>
-                        {% else %}
-                            <div class="inner-card text-center">
-                                <p class="text-gray-700">No tournaments available.</p>
-                            </div>
-                        {% endif %}
+                        <a href="{% url 'tournament_list' %}" class="btn btn-primary btn-lg shadow-lg">View All Tournaments</a>
                     </div>
-                </div>
+                {% else %}
+                    <div class="inner-card text-center">
+                        <p class="text-gray-700">No tournaments available.</p>
+                    </div>
+                {% endif %}
             </div>
-        </section>
-
+        </div>
+    </div>
+</section>
         <!-- Teams Section -->
         <section class="py-12 bg-gray-800/50">
             <div class="container">
@@ -301,9 +433,9 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {% for team in teams %}
                                     <div class="inner-card p-4">
-                                        <h5 class="card-title text-xl font-semibold mb-2 text-teal-700">{{ team.name }}</h5>
+                                        <h5 class="highlight-title text-center">{{ team.name }}</h5>
                                         <p class="mb-2"><strong>🏅 Sport:</strong> {{ team.sport_type }}</p>
-                                        <p class="mb-2"><strong>👥 Members:</strong> {{ team.members.count }}</p>
+                                        <p class="mb-2"><strong>👥 Members:</strong> {{ team.players.count }}</p>
                                         <p class="mb-2"><strong>📍 Location:</strong> {{ team.location }}</p>
                                     </div>
                                 {% endfor %}
@@ -321,19 +453,15 @@
             </div>
         </section>
 
-       
-                       
-                    
-
         <!-- Game Highlights Section -->
         <section class="py-12 bg-gray-800/50">
             <div class="container">
                 <h2 class="text-3xl font-bold text-center mb-8 text-white">More Game Highlights</h2>
                 <div class="card-custom">
-                    <div class="card-body">
+                    {% comment %} <div class="card-body">
                         <div class="owl-carousel owl-theme">
                             <div class="carousel-item">
-                                <img src="{% static 'images/img_1.jpg' %}" alt="Highlight" class="rounded-lg w-full h-64 object-cover">
+                                <img src="{% static 'images/about_2.jpg' %}" alt="Highlight" class="rounded-lg w-full h-64 object-cover">
                                 <h3 class="text-xl font-bold mt-2 text-teal-700">World Cup Championship</h3>
                                 <p class="text-gray-700">May 20th 2025</p>
                                 <p class="text-gray-700">Exciting matches and moments!</p>
@@ -357,7 +485,7 @@
                                 <p class="text-gray-700">Exciting matches and moments!</p>
                             </div>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             </div>
         </section>

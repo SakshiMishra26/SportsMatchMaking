@@ -23,8 +23,9 @@ class TeamFilterForm(forms.Form):
 class TournamentForm(forms.ModelForm):
     class Meta:
         model = Tournament
-        fields = ['name', 'sport_type', 'location', 'date_time']
+        fields = ['name', 'sport_type', 'location', 'start_date', 'end_date']
         widgets = {
-            'date_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),  # ✅ HTML5 datetime picker
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
         }
         

@@ -34,13 +34,13 @@
         }
         /* Smaller Typography for Compact Design */
         h2 {
-            font-size: 2.25rem; /* Reduced from 4xl to 3xl */
+            font-size: 2.25rem;
         }
         h4 {
-            font-size: 1.5rem; /* Reduced from 2xl to xl */
+            font-size: 1.5rem;
         }
         p, .card-text {
-            font-size: 0.9rem; /* Slightly smaller text */
+            font-size: 0.9rem;
         }
         /* Compact Padding and Margins */
         .container {
@@ -48,47 +48,71 @@
             padding-right: 1rem;
         }
         .card-body {
-            padding: 1rem; /* Reduced padding */
+            padding: 1rem;
         }
         .card-header {
-            padding: 0.75rem; /* Reduced padding */
+            padding: 0.75rem;
+        }
+        /* Button Group for Side-by-Side Buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+             font-size: 0.85rem;
         }
         /* Stylish Button Enhancements */
         .join-tournament-btn {
-            background: linear-gradient(90deg, #22c55e, #10b981); /* Green gradient */
+            background: linear-gradient(90deg, #22c55e, #10b981);
             color: white;
             border: none;
             transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
         }
         .join-tournament-btn:hover {
-            background: linear-gradient(90deg, #16a34a, #059669); /* Darker green on hover */
-            transform: scale(1.05); /* Slight scale on hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+            background: linear-gradient(90deg, #16a34a, #059669);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         .view-details-btn {
-            background: linear-gradient(90deg, #14b8a6, #22d3ee); /* Teal to Cyan gradient */
+            background: linear-gradient(90deg, #14b8a6, #22d3ee);
             color: white;
             border: none;
             transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
         }
         .view-details-btn:hover {
-            background: linear-gradient(90deg, #0d9488, #06b6d4); /* Darker teal to cyan on hover */
-            transform: scale(1.05); /* Slight scale on hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+            background: linear-gradient(90deg, #0d9488, #06b6d4);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         .create-tournament-btn {
-            background: linear-gradient(90deg, #f59e0b, #eab308); /* Yellow gradient */
+            background: linear-gradient(90deg, #f59e0b, #eab308);
             color: white;
             border: none;
             transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
         }
         .create-tournament-btn:hover {
-            background: linear-gradient(90deg, #d97706, #ca8a04); /* Darker yellow on hover */
-            transform: scale(1.05); /* Slight scale on hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+            background: linear-gradient(90deg, #d97706, #ca8a04);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        /* Section Headings */
+        .section-heading {
+            text-align: center;
+            color: #22c55e; /* Green for current tournaments */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .past-heading {
+            color: #ef4444; /* Red for past tournaments */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -102,11 +126,13 @@
         </div>
     </div>
 
-    <!-- Tournament Listings -->
+    <!-- Current Tournaments Section -->
     <div class="container mx-auto mt-6 px-4">
+        <h3 class="section-heading text-2xl font-bold mb-4">Current Tournaments</h3>
         {% if tournaments %}
             <div class="row g-3">
                 {% for tournament in tournaments %}
+                {% if tournament.is_active %}
                 <div class="col-md-6 col-lg-4 fade-in">
                     <div class="card border-0 shadow-lg h-100 hover-scale d-flex flex-column">
                         <div class="card-header bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center py-2">
@@ -115,33 +141,75 @@
                         <div class="card-body p-3 d-flex flex-column">
                             <p class="card-text text-gray-700"><i class="fas fa-medal text-blue-500 mr-2"></i> <strong>Sport Type:</strong> {{ tournament.sport_type }}</p>
                             <p class="card-text text-gray-700"><i class="fas fa-map-marker-alt text-blue-500 mr-2"></i> <strong>Location:</strong> {{ tournament.location }}</p>
-                            <p class="card-text text-gray-700"><i class="fas fa-calendar-alt text-blue-500 mr-2"></i> <strong>Date:</strong> {{ tournament.date_time|date:"F d, Y H:i" }}</p>
-
-                            <div class="mt-auto text-center">
-                                <a href="{% url 'join_tournament' tournament.id %}" class="btn w-100 mb-2 rounded-full font-semibold join-tournament-btn">
-                                    <i class="fas fa-sign-in-alt mr-2"></i> Join Tournament
-                                </a>
-                                <a href="{% url 'tournament_detail' tournament.id %}" class="btn w-100 rounded-full font-semibold view-details-btn">
-                                    <i class="fas fa-eye mr-2"></i> View Details
-                                </a>
+                            <p class="card-text text-gray-700"><i class="fas fa-calendar-alt text-blue-500 mr-2"></i> <strong>Start Date:</strong> {{ tournament.start_date|date:"F d, Y" }}</p>
+                            <p class="card-text text-gray-700"><i class="fas fa-calendar-alt text-blue-500 mr-2"></i> <strong>End Date:</strong> {{ tournament.end_date|date:"F d, Y" }}</p>
+                            <div class="mt-auto">
+                                <div class="button-group">
+                                    {% if request.user.is_authenticated %}
+                                    <a href="{% url 'join_tournament' tournament.id %}" class="btn rounded-full font-semibold join-tournament-btn">
+                                        <i class="fas fa-sign-in-alt mr-2"></i> Join Tournament
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'tournament_detail' tournament.id %}" class="btn rounded-full font-semibold view-details-btn">
+                                        <i class="fas fa-eye mr-2"></i> View Details
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% endfor %}
             </div>
         {% else %}
             <div class="alert alert-info text-center mt-6 rounded-xl shadow-md fade-in">
-                <i class="fas fa-info-circle mr-2"></i> No tournaments available.
+                <i class="fas fa-info-circle mr-2"></i> No current tournaments available.
             </div>
         {% endif %}
+    </div>
 
-        <!-- Centered "Create Tournament" Button -->
-        <div class="text-center mt-6 fade-in">
-            <a href="{% url 'create_tournament' %}" class="btn px-5 py-2 text-base font-semibold rounded-full create-tournament-btn">
-                <i class="fas fa-plus-circle mr-2"></i> Create New Tournament
-            </a>
-        </div>
+    <!-- Past Tournaments Section -->
+    <div class="container mx-auto mt-6 px-4">
+        <h3 class="section-heading text-2xl font-bold past-heading mb-4">Past Tournaments</h3>
+        {% if tournaments %}
+            <div class="row g-3">
+                {% for tournament in tournaments %}
+                {% if not tournament.is_active %}
+                <div class="col-md-6 col-lg-4 fade-in">
+                    <div class="card border-0 shadow-lg h-100 hover-scale d-flex flex-column">
+                        <div class="card-header bg-gradient-to-r from-red-600 to-red-400 text-white text-center py-2">
+                            <h5 class="card-title text-lg font-bold m-0">{{ tournament.name }}</h5>
+                        </div>
+                        <div class="card-body p-3 d-flex flex-column">
+                            <p class="card-text text-gray-700"><i class="fas fa-medal text-red-500 mr-2"></i> <strong>Sport Type:</strong> {{ tournament.sport_type }}</p>
+                            <p class="card-text text-gray-700"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i> <strong>Location:</strong> {{ tournament.location }}</p>
+                            <p class="card-text text-gray-700"><i class="fas fa-calendar-alt text-red-500 mr-2"></i> <strong>Start Date:</strong> {{ tournament.start_date|date:"F d, Y" }}</p>
+                            <p class="card-text text-gray-700"><i class="fas fa-calendar-alt text-red-500 mr-2"></i> <strong>End Date:</strong> {{ tournament.end_date|date:"F d, Y" }}</p>
+                            <div class="mt-auto">
+                                <div class="button-group">
+                                    <a href="{% url 'tournament_detail' tournament.id %}" class="btn rounded-full font-semibold view-details-btn">
+                                        <i class="fas fa-eye mr-2"></i> View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center mt-6 rounded-xl shadow-md fade-in">
+                <i class="fas fa-info-circle mr-2"></i> No past tournaments available.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Centered "Create Tournament" Button -->
+    <div class="text-center mt-6 fade-in">
+        <a href="{% url 'create_tournament' %}" class="btn rounded-full font-semibold create-tournament-btn">
+            <i class="fas fa-plus-circle mr-2"></i> Create New Tournament
+        </a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->

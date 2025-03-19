@@ -133,6 +133,17 @@
         <!-- Include Navbar -->
         {% include "navbar.html" %}
 
+        <!-- Display Messages as Pop-ups -->
+        {% if messages %}
+        <script>
+            window.onload = function() {
+                {% for message in messages %}
+                    alert("{{ message }}");
+                {% endfor %}
+            };
+        </script>
+        {% endif %}
+
         <!-- Match Details Section -->
         <div class="content">
             <div class="container mx-auto px-4 py-12" data-aos="fade-up" data-aos-duration="800">
@@ -159,7 +170,11 @@
                         {% endif %}
 
                         <div class="mt-8 flex justify-center space-x-4">
-                            <a href="{% url 'accept_match' match.id %}" class="btn-gradient">Accept</a>
+                            {% if request.user.is_authenticated %}
+                                {% if match.players_remaining > 0 and request.user not in match.accepted_by.all %}
+                                    <a href="{% url 'accept_match' match.id %}" class="btn-gradient">Accept</a>
+                                {% endif %}
+                            {% endif %}
                             <a href="{% url 'match_list' %}" class="btn-secondary-gradient">Back to Matches</a>
                         </div>
                     </div>

@@ -69,6 +69,75 @@
         .card-header {
             padding: 0.75rem; /* Reduced padding */
         }
+        /* Button Group for Side-by-Side Buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem; /* Space between buttons */
+        }
+        /* Button Styling */
+        .join-team-btn {
+            background: linear-gradient(90deg, #22c55e, #10b981); /* Green gradient */
+            color: white;
+            border: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem; /* Match match_list button size */
+            font-size: 0.85rem; /* Match match_list button font size */
+        }
+        .join-team-btn:hover {
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .leave-team-btn {
+            background: linear-gradient(90deg, #ef4444, #f97316); /* Red gradient */
+            color: white;
+            border: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem; /* Match match_list button size */
+            font-size: 0.85rem; /* Match match_list button font size */
+        }
+        .leave-team-btn:hover {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .manage-team-btn {
+            background: linear-gradient(90deg, #6b7280, #9ca3af); /* Gray gradient */
+            color: white;
+            border: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem; /* Match match_list button size */
+            font-size: 0.85rem; /* Match match_list button font size */
+        }
+        .manage-team-btn:hover {
+            background: linear-gradient(90deg, #4b5563, #6b7280);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        /* Create Team Button */
+        .create-team-btn {
+            background: linear-gradient(90deg, #f59e0b, #eab308); /* Yellow gradient */
+            color: white;
+            border: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem; /* Match match_list button size */
+            font-size: 0.85rem; /* Match match_list button font size */
+        }
+        .create-team-btn:hover {
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        @media (max-width: 576px) {
+            .button-group {
+                flex-wrap: nowrap;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -76,7 +145,7 @@
     <!-- Hero Section -->
     <div class="container mx-auto mt-6 px-4">
         <div class="header-bg text-center p-6 rounded-xl shadow-2xl text-white fade-in">
-            <h2 class="text-3xl md:text-4xl font-extrabold mb-2" style="color: #22d3ee;">Teams</h2> <!-- Updated color to cyan -->
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-2" style="color: #22d3ee;">Teams</h2>
             <p class="text-base md:text-lg">Find and join the best teams in your area!</p>
         </div>
     </div>
@@ -123,24 +192,27 @@
                             <p class="card-text text-gray-700"><i class="fas fa-medal text-blue-500 mr-2"></i> <strong>Sport Type:</strong> {{ team.sport_type }}</p>
                             <p class="card-text text-gray-700"><i class="fas fa-map-marker-alt text-blue-500 mr-2"></i> <strong>Location:</strong> {{ team.location }}</p>
                             <p class="card-text text-gray-700"><i class="fas fa-user-tie text-blue-500 mr-2"></i> <strong>Captain:</strong> {{ team.captain.username }}</p>
+                            <p class="card-text text-gray-700"><i class="fas fa-envelope text-blue-500 mr-2"></i> <strong>Contact:</strong> {{ team.captain.email }}</p>
                             <p class="card-text text-gray-700"><i class="fas fa-users text-blue-500 mr-2"></i> <strong>Players:</strong> {{ team.players.count }}</p>
 
-                            <div class="mt-auto text-center">
-                                {% if request.user in team.players.all %}
-                                    <a href="{% url 'leave_team' team.id %}" class="btn w-100 mb-2 rounded-full font-semibold text-white transition-all" style="background: linear-gradient(90deg, #ef4444, #f97316);">
-                                        <i class="fas fa-sign-out-alt mr-2"></i> Leave Team
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'join_team' team.id %}" class="btn w-100 mb-2 rounded-full font-semibold text-white transition-all" style="background: linear-gradient(90deg, #22c55e, #10b981);">
-                                        <i class="fas fa-sign-in-alt mr-2"></i> Join Team
-                                    </a>
-                                {% endif %}
+                            <div class="mt-auto">
+                                <div class="button-group">
+                                    {% if request.user in team.players.all %}
+                                        <a href="{% url 'leave_team' team.id %}" class="btn rounded-full font-semibold text-white leave-team-btn">
+                                            <i class="fas fa-sign-out-alt mr-2"></i> Leave Team
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'join_team' team.id %}" class="btn rounded-full font-semibold text-white join-team-btn">
+                                            <i class="fas fa-sign-in-alt mr-2"></i> Join Team
+                                        </a>
+                                    {% endif %}
 
-                                {% if team.captain == request.user %}
-                                    <a href="{% url 'manage_team' team.id %}" class="btn w-100 rounded-full font-semibold text-white transition-all" style="background: linear-gradient(90deg, #6b7280, #9ca3af);">
-                                        <i class="fas fa-cog mr-2"></i> Manage Team
-                                    </a>
-                                {% endif %}
+                                    {% if team.captain == request.user %}
+                                        <a href="{% url 'manage_team' team.id %}" class="btn rounded-full font-semibold text-white manage-team-btn">
+                                            <i class="fas fa-cog mr-2"></i> Manage Team
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -155,7 +227,7 @@
 
         <!-- Centered "Create a Team" Button -->
         <div class="text-center mt-6 fade-in">
-            <a href="{% url 'create_team' %}" class="btn px-5 py-2 text-base font-semibold rounded-full shadow-md text-white transition-all" style="background: linear-gradient(90deg, #f59e0b, #eab308);">
+            <a href="{% url 'create_team' %}" class="btn rounded-full font-semibold text-white create-team-btn">
                 <i class="fas fa-plus-circle mr-2"></i> Create a Team
             </a>
         </div>

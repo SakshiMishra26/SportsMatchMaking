@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Team,Tournament
-from .forms import TeamCreateForm, TeamUpdateForm,TeamFilterForm,TournamentForm
+from .models import Team, Tournament
+from .forms import TeamCreateForm, TeamUpdateForm, TeamFilterForm, TournamentForm
+from Localsports.models import Notification  # Import the new Notification model
 
 @login_required
 def create_team(request):
@@ -10,9 +11,9 @@ def create_team(request):
         form = TeamCreateForm(request.POST)
         if form.is_valid():
             team = form.save(commit=False)
-            team.captain = request.user  # ✅ Set the logged-in user as captain
+            team.captain = request.user
             team.save()
-            team.players.add(request.user)  # ✅ Captain automatically joins the team
+            team.players.add(request.user)
             messages.success(request, "Team created successfully!")
             return redirect('team_list')
     else:
@@ -34,16 +35,38 @@ def team_list(request):
             teams = teams.filter(skill_level=skill_level)
         if location:
             teams = teams.filter(location__icontains=location)
-    return render(request, 'teams/team_list.html', {'teams': teams,"form": form})
+    return render(request, 'teams/team_list.html', {'teams': teams, "form": form})
 
 @login_required
 def join_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)
-    if request.user not in team.players.all():
-        team.players.add(request.user)
-        messages.success(request, f"You joined the team: {team.name}")
+    if request.user in team.players.all():
+        messages.error(request, "You are already a member of this team!")
+        # Create a notification for the user
+        Notification.objects.create(
+            recipient=request.user,
+            notification_type='team',
+            related_id=team.id,
+            message=f"You are already a member of the team: {team.name}"
+        )
     else:
-        messages.error(request, "You are already in this team.")
+        team.players.add(request.user)
+        # Create a notification for the user
+        Notification.objects.create(
+            recipient=request.user,
+            notification_type='team',
+            related_id=team.id,
+            message=f"You have successfully joined the team: {team.name}"
+        )
+        # Create a notification for the team captain
+        if team.captain:
+            Notification.objects.create(
+                recipient=team.captain,
+                notification_type='team',
+                related_id=team.id,
+                message=f"{request.user.username} has joined your team: {team.name}"
+            )
+        messages.success(request, "You have successfully joined the team!")
     return redirect('team_list')
 
 @login_required
@@ -87,48 +110,62 @@ def create_tournament(request):
         form = TournamentForm()
     return render(request, "tournaments/create_tournament.html", {"form": form})
 
-# @login_required
-# def join_tournament(request, tournament_id):
-#     tournament = get_object_or_404(Tournament, id=tournament_id)
-#     user_team = Team.objects.filter(players=request.user).first()
-
-#     if user_team and user_team not in tournament.teams.all():
-#         tournament.teams.add(user_team)
-    
-#     return redirect('tournament_list')
-
 @login_required
 def join_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
-    user_team = Team.objects.filter(captain=request.user).first()  # ✅ Only fetch user's captain team
-
+    user_team = Team.objects.filter(captain=request.user).first()
     if not user_team:
         messages.error(request, "You must be a team captain to register for a tournament.")
+        # Create a notification for the user
+        Notification.objects.create(
+            recipient=request.user,
+            notification_type='tournament',
+            related_id=tournament.id,
+            message="You must be a team captain to register for a tournament."
+        )
         return redirect('tournament_detail', tournament_id=tournament.id)
-
     if user_team in tournament.teams.all():
-        messages.warning(request, "Your team is already registered for this tournament.")
+        messages.error(request, "Your team is already registered for this tournament!")
+        # Create a notification for the user
+        Notification.objects.create(
+            recipient=request.user,
+            notification_type='tournament',
+            related_id=tournament.id,
+            message=f"Your team {user_team.name} is already registered for the tournament: {tournament.name}"
+        )
     else:
         tournament.teams.add(user_team)
-        messages.success(request, "Your team has been registered successfully!")
-
+        # Create a notification for the user
+        Notification.objects.create(
+            recipient=request.user,
+            notification_type='tournament',
+            related_id=tournament.id,
+            message=f"Your team {user_team.name} has been registered for the tournament: {tournament.name}"
+        )
+        # Create a notification for the tournament creator (if applicable)
+        if tournament.created_by:
+            Notification.objects.create(
+                recipient=tournament.created_by,
+                notification_type='tournament',
+                related_id=tournament.id,
+                message=f"Team {user_team.name} has registered for your tournament: {tournament.name}"
+            )
+        messages.success(request, "Your team has been registered for the tournament!")
     return redirect('tournament_detail', tournament_id=tournament.id)
 
 def tournament_list(request):
-    tournaments = Tournament.objects.all()
+    tournaments = Tournament.objects.all().order_by('start_date')
     return render(request, "tournaments/tournament_list.html", {"tournaments": tournaments})
-
 
 def tournament_detail(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     return render(request, "tournaments/tournament_detail.html", {"tournament": tournament})
 
-
 @login_required
 def delete_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
 
-    if request.user == tournament.created_by:  # ✅ Only allow creator to delete
+    if request.user == tournament.created_by:
         tournament.delete()
         messages.success(request, "Tournament deleted successfully!")
         return redirect('tournament_list')

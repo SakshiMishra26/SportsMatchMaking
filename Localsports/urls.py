@@ -15,5 +15,8 @@ urlpatterns = [
 
     path('matches/accept/<int:match_id>/', views.accept_match, name='accept_match'),
     path('notifications/', views.notifications, name='notifications'),
+    path('about-us/', views.about_us, name='about_us'),
+    path('mark_notification_read/<int:notification_id>/', views.mark_notification_read, name='mark_notification_read'),
+    path('delete_notification/<int:notification_id>/', views.delete_notification, name='delete_notification'),  # New URL
 ]
 

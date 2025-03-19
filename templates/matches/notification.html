@@ -1,15 +1,29 @@
-{% comment %} {% extends "base.html" %}
-{% block content %} {% endcomment %}
+{% comment %} {% extends "base.html" %} {% endcomment %}
+{% comment %} {% block content %} {% endcomment %}
 <h2>Notifications</h2>
 
 {% if notifications %}
     <ul>
         {% for notification in notifications %}
-            <li>{{ notification.message }} ({{ notification.created_at }})</li>
+            <li style="{% if not notification.is_read %}font-weight: bold;{% endif %}">
+                {{ notification.message }} ({{ notification.created_at|date:"F d, Y H:i" }})
+                {% if not notification.is_read %}
+                    <form method="POST" action="{% url 'mark_notification_read' notification.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-primary">Mark as Read</button>
+                    </form>
+                {% else %}
+                    <span style="color: green;">(Read)</span>
+                {% endif %}
+                <form method="POST" action="{% url 'delete_notification' notification.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
 {% else %}
-    <p>No new notifications.</p>
+    <p>No notifications available.</p>
 {% endif %}
 
 {% comment %} {% endblock %} {% endcomment %}

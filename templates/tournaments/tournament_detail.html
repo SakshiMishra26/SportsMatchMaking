@@ -18,7 +18,7 @@
     <style>
         /* Gradient Background for Page */
         body {
-            background: linear-gradient(135deg, #1e3a8a, #1e40af); /* Dark blue gradient background */
+            background: linear-gradient(135deg, #1e3a8a, #1e40af);
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;
@@ -31,18 +31,18 @@
         }
         /* Content Padding to Avoid Navbar Overlap */
         .content {
-            padding-top: 80px; /* Adjust based on navbar height */
+            padding-top: 80px;
         }
         /* Modern Card Design */
         .tournament-card {
-            background: #ffffff; /* White background for contrast */
-            border-radius: 20px; /* Rounded corners */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Stronger shadow for depth */
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             padding: 2.5rem;
             transition: all 0.3s ease-in-out;
         }
         .tournament-card:hover {
-            transform: translateY(-8px); /* Lift effect on hover */
+            transform: translateY(-8px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
         }
         /* Gradient Heading Underline */
@@ -58,29 +58,29 @@
             height: 4px;
             bottom: -8px;
             left: 0;
-            background: linear-gradient(90deg, #14b8a6, #22d3ee); /* Teal to Cyan gradient */
+            background: linear-gradient(90deg, #14b8a6, #22d3ee);
             border-radius: 2px;
         }
         /* Gradient Button */
         .btn-gradient {
-            background: linear-gradient(90deg, #14b8a6, #22d3ee); /* Teal to Cyan gradient */
+            background: linear-gradient(90deg, #14b8a6, #22d3ee);
             color: #fff;
             border: none;
             padding: 0.75rem 2rem;
-            border-radius: 50px; /* More rounded button */
+            border-radius: 50px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             transition: all 0.3s ease-in-out;
         }
         .btn-gradient:hover {
-            background: linear-gradient(90deg, #0f766e, #06b6d4); /* Darker gradient on hover */
-            transform: scale(1.05); /* Slight scale on hover */
+            background: linear-gradient(90deg, #0f766e, #06b6d4);
+            transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         /* Danger Button (Delete) */
         .btn-danger-gradient {
-            background: linear-gradient(90deg, #dc2626, #ef4444); /* Red gradient for danger */
+            background: linear-gradient(90deg, #dc2626, #ef4444);
             color: #fff;
             border: none;
             padding: 0.75rem 2rem;
@@ -91,13 +91,13 @@
             transition: all 0.3s ease-in-out;
         }
         .btn-danger-gradient:hover {
-            background: linear-gradient(90deg, #b91c1c, #dc2626); /* Darker red on hover */
+            background: linear-gradient(90deg, #b91c1c, #dc2626);
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         /* Secondary Button for Back to Tournaments */
         .btn-secondary-gradient {
-            background: linear-gradient(90deg, #6b7280, #9ca3af); /* Gray gradient for secondary button */
+            background: linear-gradient(90deg, #6b7280, #9ca3af);
             color: #fff;
             border: none;
             padding: 0.75rem 2rem;
@@ -108,7 +108,7 @@
             transition: all 0.3s ease-in-out;
         }
         .btn-secondary-gradient:hover {
-            background: linear-gradient(90deg, #4b5563, #6b7280); /* Darker gray on hover */
+            background: linear-gradient(90deg, #4b5563, #6b7280);
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
@@ -118,20 +118,20 @@
             padding-left: 0;
         }
         .team-list li {
-            background: #f3f4f6; /* Light gray background for list items */
-            color: #1f2937; /* Dark gray text */
+            background: #f3f4f6;
+            color: #1f2937;
             padding: 0.75rem 1.5rem;
             margin-bottom: 0.75rem;
             border-radius: 10px;
             transition: all 0.3s ease-in-out;
         }
         .team-list li:hover {
-            background: #e5e7eb; /* Slightly darker gray on hover */
-            transform: translateX(5px); /* Slide effect on hover */
+            background: #e5e7eb;
+            transform: translateX(5px);
         }
         /* Text Colors */
         .text-primary {
-            color: #1f2937; /* Dark gray for contrast on white card */
+            color: #1f2937;
         }
         /* Responsive Adjustments */
         @media (max-width: 768px) {
@@ -158,7 +158,8 @@
 
                     <div class="space-y-5">
                         <p class="text-lg text-primary"><strong class="font-semibold">Location:</strong> {{ tournament.location }}</p>
-                        <p class="text-lg text-primary"><strong class="font-semibold">Date:</strong> {{ tournament.date_time }}</p>
+                        <p class="text-lg text-primary"><strong class="font-semibold">Start Date:</strong> {{ tournament.start_date|date:"F d, Y" }}</p>
+                        <p class="text-lg text-primary"><strong class="font-semibold">End Date:</strong> {{ tournament.end_date|date:"F d, Y"|default:"TBD" }}</p>
                         <p class="text-lg text-primary"><strong class="font-semibold">Teams Registered:</strong> {{ tournament.teams.count }}</p>
 
                         <div>
