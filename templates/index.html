@@ -17,7 +17,7 @@
     <!-- Custom Styles -->
     <style>
         body {
-            background-image: url("{% static 'images/about_2.jpg' %}");
+            {% comment %} background-image: url("{% static 'images/about_2.jpg' %}"); {% endcomment %}
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -73,7 +73,7 @@
             justify-content: center;
             text-align: center;
             padding: 2rem;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(17, 2, 2, 0.92);
         }
         .card-custom {
             background: linear-gradient(135deg, #2dd4bf, #3b82f6);
@@ -227,8 +227,7 @@
         </section>
 
         <!-- Notifications Section -->
-        <section class="py-12 bg-gradient-to-br from-indigo-900/50 to-blue-500/50">
-            <div class="container">
+        <section class="py-12 bg-gradient-to-br from-blue-100/50 to-cyan-100/50">            <div class="container">
                 <h2 class="text-3xl font-bold text-center mb-8 text-white">Notifications</h2>
                 <div class="card-custom">
                     <div class="card-body">
@@ -431,7 +430,7 @@
                     <div class="card-body">
                         {% if teams %}
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {% for team in teams %}
+                                {% for team in teams|slice:":3" %}
                                     <div class="inner-card p-4">
                                         <h5 class="highlight-title text-center">{{ team.name }}</h5>
                                         <p class="mb-2"><strong>🏅 Sport:</strong> {{ team.sport_type }}</p>
@@ -454,7 +453,7 @@
         </section>
 
         <!-- Game Highlights Section -->
-        <section class="py-12 bg-gray-800/50">
+      {% comment %}  <section class="py-12 bg-gray-800/50">
             <div class="container">
                 <h2 class="text-3xl font-bold text-center mb-8 text-white">More Game Highlights</h2>
                 <div class="card-custom">
@@ -485,10 +484,10 @@
                                 <p class="text-gray-700">Exciting matches and moments!</p>
                             </div>
                         </div>
-                    </div> {% endcomment %}
+                    </div> 
                 </div>
             </div>
-        </section>
+        </section> {% endcomment %}
 
         <!-- Latest Sports News Section -->
         <section class="py-12 bg-gray-800/50">
@@ -557,7 +556,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-8">
-                    <p class="text-gray-300">© 2025 Sportz. All rights reserved | Designed with <span class="text-red-500">♥</span> by <a href="https://colorlib.com" target="_blank" class="text-teal-300">Colorlib</a></p>
+                    {% comment %} <p class="text-gray-300">© 2025 Sportz. All rights reserved | Designed with <span class="text-red-500">♥</span> by <a href="https://colorlib.com" target="_blank" class="text-teal-300">Colorlib</a></p> {% endcomment %}
                 </div>
             </div>
         </footer>

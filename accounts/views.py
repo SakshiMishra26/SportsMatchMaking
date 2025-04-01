@@ -80,22 +80,22 @@ def edit_profile(request):
 
 
 
-# def register(request):
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)  # Use CustomUserCreationForm
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)  
-#             messages.success(request, "Registration successful! You can now log in.")
-#             return redirect('index')
-#         else:
-#             for field, error_list in form.errors.items():
-#                 for error in error_list:
-#                     messages.error(request, f"{field.capitalize()}: {error}")
-#     else:
-#         form = CustomUserCreationForm()
-#         print('User not created')    
-#     return render(request, 'registration.html', {'form': form})
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)  # Use CustomUserCreationForm
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  
+            messages.success(request, "Registration successful! You can now log in.")
+            return redirect('index')
+        else:
+            for field, error_list in form.errors.items():
+                for error in error_list:
+                    messages.error(request, f"{field.capitalize()}: {error}")
+    else:
+        form = CustomUserCreationForm()
+        print('User not created')    
+    return render(request, 'registration.html', {'form': form})
 
 # def register(request):
 #     if request.method == 'POST':
@@ -149,69 +149,69 @@ def edit_profile(request):
 
 #     return render(request, 'registration.html', {'form': form})
 
-def register(request):
-    if request.method == 'POST':
-        if 'send_otp' in request.POST:  # When user clicks "Send OTP"
-            email = request.POST.get('email')
+# def register(request):
+#     if request.method == 'POST':
+#         if 'send_otp' in request.POST:  # When user clicks "Send OTP"
+#             email = request.POST.get('email')
             
-            if User.objects.filter(email=email).exists():
-                messages.error(request, "Email is already registered.")
-                return redirect('register')
+#             if User.objects.filter(email=email).exists():
+#                 messages.error(request, "Email is already registered.")
+#                 return redirect('register')
 
-            otp = random.randint(100000, 999999)  # Generate a 6-digit OTP
-            request.session['otp'] = str(otp)  # Store OTP in session
-            request.session['email'] = email  # Store email in session
+#             otp = random.randint(100000, 999999)  # Generate a 6-digit OTP
+#             request.session['otp'] = str(otp)  # Store OTP in session
+#             request.session['email'] = email  # Store email in session
 
-            try:
-                send_mail(
-                    'Your OTP for Registration',
-                    f'Your OTP is {otp}. Please enter it to complete registration.',
-                    'your-email@gmail.com',  # Replace with your email
-                    [email],  # Receiver email
-                    fail_silently=False,
-                )
-                messages.success(request, "OTP sent to your email!")
-                return render(request, 'registration.html', {'otp_sent': True, 'email': email, 'form': CustomUserCreationForm()})
-            except Exception as e:
-                messages.error(request, f"Failed to send OTP: {str(e)}")
-                return redirect('register')
+#             try:
+#                 send_mail(
+#                     'Your OTP for Registration',
+#                     f'Your OTP is {otp}. Please enter it to complete registration.',
+#                     'your-email@gmail.com',  # Replace with your email
+#                     [email],  # Receiver email
+#                     fail_silently=False,
+#                 )
+#                 messages.success(request, "OTP sent to your email!")
+#                 return render(request, 'registration.html', {'otp_sent': True, 'email': email, 'form': CustomUserCreationForm()})
+#             except Exception as e:
+#                 messages.error(request, f"Failed to send OTP: {str(e)}")
+#                 return redirect('register')
 
-        else:  # When user submits the registration form
-            entered_otp = request.POST.get('otp')
-            stored_otp = request.session.get('otp')
-            email = request.session.get('email')
+#         else:  # When user submits the registration form
+#             entered_otp = request.POST.get('otp')
+#             stored_otp = request.session.get('otp')
+#             email = request.session.get('email')
 
-            if not stored_otp or entered_otp != stored_otp:
-                messages.error(request, "Invalid OTP. Please try again.")
-                return render(request, 'registration.html', {'otp_sent': True, 'email': email, 'form': CustomUserCreationForm()})
+#             if not stored_otp or entered_otp != stored_otp:
+#                 messages.error(request, "Invalid OTP. Please try again.")
+#                 return render(request, 'registration.html', {'otp_sent': True, 'email': email, 'form': CustomUserCreationForm()})
 
-            form = CustomUserCreationForm(request.POST)
-            if form.is_valid():
-                user = form.save(commit=False)
-                user.email = email  # Assign verified email
-                user.save()
-                # Create UserProfile
-                UserProfile.objects.create(
-                    user=user,
-                    location=form.cleaned_data['location'],
-                    sports=form.cleaned_data['sports'],
-                    skill_level=form.cleaned_data['skill_level']
-                )
-                login(request, user)
-                messages.success(request, "Registration successful! You are now logged in.")
-                del request.session['otp']  # Clear OTP from session
-                del request.session['email']  # Clear email from session
-                return redirect('index')
-            else:
-                for field, error_list in form.errors.items():
-                    for error in error_list:
-                        messages.error(request, f"{field.capitalize()}: {error}")
-                return render(request, 'registration.html', {'otp_sent': True, 'email': email, 'form': form})
+#             form = CustomUserCreationForm(request.POST)
+#             if form.is_valid():
+#                 user = form.save(commit=False)
+#                 user.email = email  # Assign verified email
+#                 user.save()
+#                 # Create UserProfile
+#                 UserProfile.objects.create(
+#                     user=user,
+#                     location=form.cleaned_data['location'],
+#                     sports=form.cleaned_data['sports'],
+#                     skill_level=form.cleaned_data['skill_level']
+#                 )
+#                 login(request, user)
+#                 messages.success(request, "Registration successful! You are now logged in.")
+#                 del request.session['otp']  # Clear OTP from session
+#                 del request.session['email']  # Clear email from session
+#                 return redirect('index')
+#             else:
+#                 for field, error_list in form.errors.items():
+#                     for error in error_list:
+#                         messages.error(request, f"{field.capitalize()}: {error}")
+#                 return render(request, 'registration.html', {'otp_sent': True, 'email': email, 'form': form})
 
-    else:
-        form = CustomUserCreationForm()
+#     else:
+#         form = CustomUserCreationForm()
     
-    return render(request, 'registration.html', {'form': form})
+#     return render(request, 'registration.html', {'form': form})
 
 
 def login_view(request):

@@ -161,6 +161,7 @@
                         <p class="text-lg text-primary"><strong class="font-semibold">Start Date:</strong> {{ tournament.start_date|date:"F d, Y" }}</p>
                         <p class="text-lg text-primary"><strong class="font-semibold">End Date:</strong> {{ tournament.end_date|date:"F d, Y"|default:"TBD" }}</p>
                         <p class="text-lg text-primary"><strong class="font-semibold">Teams Registered:</strong> {{ tournament.teams.count }}</p>
+                        <p class="text-lg text-primary"><strong class="font-semibold">Required Team Size:</strong> {{ tournament.required_team_size }}</p> <!-- Added -->
 
                         <div>
                             <h3 class="text-2xl font-semibold mb-3 text-primary">Registered Teams:</h3>

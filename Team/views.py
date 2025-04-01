@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Team, Tournament
-from .forms import TeamCreateForm, TeamUpdateForm, TeamFilterForm, TournamentForm
-from Localsports.models import Notification  # Import the new Notification model
+from .forms import TeamCreateForm, TeamUpdateForm, TeamFilterForm, TournamentForm, JoinTournamentForm
+from Localsports.models import Notification
+from django.core.mail import send_mail
+from django.conf import settings
 
 @login_required
 def create_team(request):
@@ -23,12 +25,10 @@ def create_team(request):
 def team_list(request):
     teams = Team.objects.all()
     form = TeamFilterForm(request.GET)
-    
     if form.is_valid():
         sport_type = form.cleaned_data.get('sport_type')
         skill_level = form.cleaned_data.get('skill_level')
         location = form.cleaned_data.get('location')
-
         if sport_type:
             teams = teams.filter(sport_type=sport_type)
         if skill_level:
@@ -42,7 +42,6 @@ def join_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)
     if request.user in team.players.all():
         messages.error(request, "You are already a member of this team!")
-        # Create a notification for the user
         Notification.objects.create(
             recipient=request.user,
             notification_type='team',
@@ -51,14 +50,12 @@ def join_team(request, team_id):
         )
     else:
         team.players.add(request.user)
-        # Create a notification for the user
         Notification.objects.create(
             recipient=request.user,
             notification_type='team',
             related_id=team.id,
             message=f"You have successfully joined the team: {team.name}"
         )
-        # Create a notification for the team captain
         if team.captain:
             Notification.objects.create(
                 recipient=team.captain,
@@ -82,11 +79,9 @@ def leave_team(request, team_id):
 @login_required
 def manage_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)
-
     if team.captain != request.user:
         messages.error(request, "You are not the team captain.")
         return redirect('team_list')
-
     if request.method == 'POST':
         form = TeamUpdateForm(request.POST, instance=team)
         if form.is_valid():
@@ -105,6 +100,27 @@ def create_tournament(request):
             tournament = form.save(commit=False)
             tournament.created_by = request.user
             tournament.save()
+            # Send email to creator
+            subject = f"New Tournament Created: {tournament.name}"
+            message = (
+                f"Dear {request.user.username},\n\n"
+                f"You have successfully created a new tournament:\n"
+                f"Name: {tournament.name}\n"
+                f"Sport Type: {tournament.sport_type}\n"
+                f"Location: {tournament.location}\n"
+                f"Start Date: {tournament.start_date}\n"
+                f"End Date: {tournament.end_date}\n"
+                f"Required Team Size: {tournament.required_team_size}\n\n"
+                f"Thank you for organizing this event!"
+            )
+            send_mail(
+                subject,
+                message,
+                settings.EMAIL_HOST_USER,
+                [request.user.email],
+                fail_silently=False,
+            )
+            messages.success(request, "Tournament created successfully!")
             return redirect('tournament_list')
     else:
         form = TournamentForm()
@@ -114,45 +130,62 @@ def create_tournament(request):
 def join_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     user_team = Team.objects.filter(captain=request.user).first()
+    
     if not user_team:
         messages.error(request, "You must be a team captain to register for a tournament.")
-        # Create a notification for the user
-        Notification.objects.create(
-            recipient=request.user,
-            notification_type='tournament',
-            related_id=tournament.id,
-            message="You must be a team captain to register for a tournament."
-        )
-        return redirect('tournament_detail', tournament_id=tournament.id)
+        return render(request, 'tournaments/join_tournament.html', {'tournament': tournament})
+
     if user_team in tournament.teams.all():
         messages.error(request, "Your team is already registered for this tournament!")
-        # Create a notification for the user
-        Notification.objects.create(
-            recipient=request.user,
-            notification_type='tournament',
-            related_id=tournament.id,
-            message=f"Your team {user_team.name} is already registered for the tournament: {tournament.name}"
-        )
-    else:
-        tournament.teams.add(user_team)
-        # Create a notification for the user
-        Notification.objects.create(
-            recipient=request.user,
-            notification_type='tournament',
-            related_id=tournament.id,
-            message=f"Your team {user_team.name} has been registered for the tournament: {tournament.name}"
-        )
-        # Create a notification for the tournament creator (if applicable)
-        if tournament.created_by:
-            Notification.objects.create(
-                recipient=tournament.created_by,
-                notification_type='tournament',
-                related_id=tournament.id,
-                message=f"Team {user_team.name} has registered for your tournament: {tournament.name}"
-            )
-        messages.success(request, "Your team has been registered for the tournament!")
-    return redirect('tournament_detail', tournament_id=tournament.id)
+        return render(request, 'tournaments/join_tournament.html', {'tournament': tournament})
 
+    if request.method == "POST":
+        form = JoinTournamentForm(request.POST)
+        if form.is_valid():
+            team_size = form.cleaned_data['team_size']
+            if team_size == tournament.required_team_size:
+                tournament.teams.add(user_team)
+                Notification.objects.create(
+                    recipient=request.user,
+                    notification_type='tournament',
+                    related_id=tournament.id,
+                    message=f"Your team {user_team.name} has been registered for the tournament: {tournament.name}"
+                )
+                if tournament.created_by:
+                    Notification.objects.create(
+                        recipient=tournament.created_by,
+                        notification_type='tournament',
+                        related_id=tournament.id,
+                        message=f"Team {user_team.name} has registered for your tournament: {tournament.name}"
+                    )
+                # Send email to user
+                subject = f"Joined Tournament: {tournament.name}"
+                message = (
+                    f"Dear {request.user.username},\n\n"
+                    f"Your team {user_team.name} has successfully joined the tournament:\n"
+                    f"Name: {tournament.name}\n"
+                    f"Sport Type: {tournament.sport_type}\n"
+                    f"Location: {tournament.location}\n"
+                    f"Start Date: {tournament.start_date}\n"
+                    f"End Date: {tournament.end_date}\n"
+                    f"Required Team Size: {tournament.required_team_size}\n\n"
+                    f"Get ready for the event!"
+                )
+                send_mail(
+                    subject,
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [request.user.email],
+                    fail_silently=False,
+                )
+                messages.success(request, "Your team has been registered for the tournament!")
+                return redirect('tournament_detail', tournament_id=tournament.id)
+            else:
+                messages.error(request, f"Your team size ({team_size}) does not match the required size ({tournament.required_team_size}) for {tournament.sport_type}.")
+    else:
+        form = JoinTournamentForm()
+
+    return render(request, 'tournaments/join_tournament.html', {'form': form, 'tournament': tournament})
 def tournament_list(request):
     tournaments = Tournament.objects.all().order_by('start_date')
     return render(request, "tournaments/tournament_list.html", {"tournaments": tournaments})
@@ -164,7 +197,6 @@ def tournament_detail(request, tournament_id):
 @login_required
 def delete_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
-
     if request.user == tournament.created_by:
         tournament.delete()
         messages.success(request, "Tournament deleted successfully!")

@@ -1,19 +1,15 @@
 from django import forms
-from .models import Team
-from .models import Tournament
-
+from .models import Team, Tournament
 
 class TeamCreateForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name', 'sport_type','skill_level', 'location']
+        fields = ['name', 'sport_type', 'skill_level', 'location']
 
 class TeamUpdateForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ['name', 'sport_type']
-
-
 
 class TeamFilterForm(forms.Form):
     sport_type = forms.ChoiceField(choices=[('', 'All Sports')] + Team.SPORT_CHOICES, required=False)
@@ -28,4 +24,6 @@ class TournamentForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
         }
-        
+
+class JoinTournamentForm(forms.Form):
+    team_size = forms.IntegerField(min_value=1, label="Your Team Size", help_text="Enter the number of players in your team.")

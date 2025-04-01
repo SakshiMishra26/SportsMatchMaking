@@ -30,20 +30,39 @@ class Team(models.Model):
 
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=100)
-    sport_type = models.CharField(max_length=50, choices=[
+    SPORT_CHOICES = [
         ('Football', 'Football'),
         ('Basketball', 'Basketball'),
         ('Tennis', 'Tennis'),
         ('Cricket', 'Cricket'),
-    ])
+    ]
+    # Define required team sizes for each sport
+    SPORT_TEAM_SIZES = {
+        'Football': 11,  # 11 players per team
+        'Basketball': 5,  # 5 players per team
+        'Tennis': 2,     # Doubles (can be 1 for singles, but we'll assume doubles)
+        'Cricket': 11,   # 11 players per team
+    }
+    name = models.CharField(max_length=100)
+    sport_type = models.CharField(max_length=50, choices=SPORT_CHOICES)
     location = models.CharField(max_length=100)
     start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)  # New field
+    end_date = models.DateField(null=True, blank=True)
     teams = models.ManyToManyField(Team, related_name="tournaments", blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_tournaments")
     is_active = models.BooleanField(default=True)
+    # required_team_size = models.IntegerField(editable=False)
+    required_team_size = models.IntegerField(default=0)  # Temporary default for migrations
+
+    def save(self, *args, **kwargs):
+        # Ensure required_team_size is set based on sport_type
+        self.required_team_size = self.SPORT_TEAM_SIZES.get(self.sport_type, 0)
+        super().save(*args, **kwargs)
+
+    def can_team_join(self, team):
+        # Check if team meets size and sport requirements
+        return (team.sport_type == self.sport_type and
+                team.players.count() == self.required_team_size)
 
     def __str__(self):
         return f"{self.name} - {self.sport_type}"
-    

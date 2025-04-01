@@ -35,17 +35,17 @@
                 <input type="password" class="input-field" name="password" placeholder="Password" required>
                 <input type="checkbox" class="check-box"> <span>Remember Password</span>
                 <button type="submit" class="submit-btn">Log in</button>
-                <p><a href="/accounts/password-reset/">Forgot Password?</a></p>
+                {% comment %} <p><a href="/accounts/password-reset/">Forgot Password?</a></p> {% endcomment %}
             </form>
 
             <!-- Registration Form -->
             <form id="register" class="input-group" method="POST" action="{% url 'register' %}">
                 {% csrf_token %}
                 <input type="email" class="input-field" name="email" id="email" placeholder="Enter Email" value="{{ email }}" required>
-                <button type="button" id="send-otp-btn" class="submit-btn" onclick="sendOTP()">Send OTP</button>
+                {% comment %} <button type="button" id="send-otp-btn" class="submit-btn" onclick="sendOTP()">Send OTP</button>
                 {% if otp_sent %}
                 <input type="text" class="input-field" name="otp" id="otp" placeholder="Enter OTP" required>
-                {% endif %}
+                {% endif %} {% endcomment %}
                 <input type="text" class="input-field" name="username" placeholder="User ID" required>
                 <input type="password" class="input-field" name="password1" id="password1" placeholder="Password" required>
                 <input type="password" class="input-field" name="password2" id="password2" placeholder="Confirm Password" required>
