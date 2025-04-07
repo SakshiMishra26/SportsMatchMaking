@@ -12,8 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- AOS CSS (for animations) -->
-    <link rel="stylesheet" href="{% static 'aos.css' %}">
+    <!-- AOS CSS (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" integrity="sha512-2v4F2H0X2zXJ8X+EB3FnYHFRUvkf+c/-QRnLhZMt/UcfgTPwruLMhK2TVL8bY7/gS7uE1uKqfT/5kmPnF95w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Custom Styles -->
     <style>
         /* Gradient Background for Page */
@@ -133,6 +133,16 @@
         .text-primary {
             color: #1f2937;
         }
+        /* Clickable Location Link */
+        .clickable-location {
+            color: #14b8a6;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out;
+        }
+        .clickable-location:hover {
+            color: #0f766e;
+        }
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .tournament-card {
@@ -157,11 +167,15 @@
                     <h2 class="tournament-title text-4xl font-bold text-primary">{{ tournament.name }} ({{ tournament.sport_type }})</h2>
 
                     <div class="space-y-5">
-                        <p class="text-lg text-primary"><strong class="font-semibold">Location:</strong> {{ tournament.location }}</p>
+                        <p class="text-lg text-primary"><strong class="font-semibold">Location:</strong>
+                            <span class="clickable-location" onclick="window.open('https://www.google.com/maps?q={{ tournament.latitude|default:tournament.location|urlencode }},{{ tournament.longitude|default:tournament.location|urlencode }}', '_blank');">
+                                {{ tournament.location }}
+                            </span>
+                        </p>
                         <p class="text-lg text-primary"><strong class="font-semibold">Start Date:</strong> {{ tournament.start_date|date:"F d, Y" }}</p>
                         <p class="text-lg text-primary"><strong class="font-semibold">End Date:</strong> {{ tournament.end_date|date:"F d, Y"|default:"TBD" }}</p>
                         <p class="text-lg text-primary"><strong class="font-semibold">Teams Registered:</strong> {{ tournament.teams.count }}</p>
-                        <p class="text-lg text-primary"><strong class="font-semibold">Required Team Size:</strong> {{ tournament.required_team_size }}</p> <!-- Added -->
+                        <p class="text-lg text-primary"><strong class="font-semibold">Required Team Size:</strong> {{ tournament.required_team_size }}</p>
 
                         <div>
                             <h3 class="text-2xl font-semibold mb-3 text-primary">Registered Teams:</h3>
@@ -179,7 +193,11 @@
                         {% endif %}
 
                         <div class="mt-8 flex justify-center space-x-4">
-                            <a href="{% url 'join_tournament' tournament.id %}" class="btn-gradient">Join Tournament</a>
+                            {% if not tournament.end_date or tournament.end_date >= timezone.now.date %}
+                                <a href="{% url 'join_tournament' tournament.id %}" class="btn-gradient">Join Tournament</a>
+                            {% else %}
+                                <p class="text-lg text-red-500">This tournament has expired and is no longer open for joining.</p>
+                            {% endif %}
 
                             {% if user == tournament.created_by %}
                                 <form method="post" action="{% url 'delete_tournament' tournament.id %}" class="inline">
@@ -199,8 +217,8 @@
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS JS (for animations) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <!-- AOS JS (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" integrity="sha512-2v4F2H0X2zXJ8X+EB3FnYHFRUvkf+c/-QRnLhZMt/UcfgTPwruLMhK2TVL8bY7/gS7uE1uKqfT/5kmPnF95w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         AOS.init();
     </script>

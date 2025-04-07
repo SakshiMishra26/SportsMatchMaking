@@ -28,7 +28,6 @@
         }
         /* Background Image with Blur */
         body {
-            background-image: url('{% static "C:\\Users\\SAKSHI\\sports\\static\\images\\about_2.jpg" %}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -104,7 +103,6 @@
     </style>
 </head>
 <body class="font-sans">
-
     <!-- Main Content Section -->
     <div class="container mx-auto mt-6 px-4">
         <div class="row justify-content-center">
@@ -119,6 +117,8 @@
                             {% csrf_token %}
                             <div class="mt-3 space-y-4">
                                 {{ form.as_p }}
+                                <input type="hidden" name="latitude" id="id_latitude" value="{{ form.latitude.value|default:'' }}">
+                                <input type="hidden" name="longitude" id="id_longitude" value="{{ form.longitude.value|default:'' }}">
                             </div>
                             
                             <div class="text-center mt-4">
@@ -139,10 +139,86 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const locationInput = document.getElementById('id_location');
+            const latInput = document.getElementById('id_latitude');
+            const lngInput = document.getElementById('id_longitude');
+
+            // Auto-fill location on load
+            if (navigator.geolocation) {
+                console.log("Requesting geolocation...");
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        console.log(`Geolocation received: lat=${lat}, lng=${lng}`);
+
+                        latInput.value = lat;
+                        lngInput.value = lng;
+
+                        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.display_name) {
+                                    console.log("Address received:", data.display_name);
+                                    locationInput.value = data.display_name;
+                                } else {
+                                    console.log("No address found, user can enter manually");
+                                    locationInput.value = "";
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Reverse geocoding error:", error);
+                                locationInput.value = "";
+                            });
+                    },
+                    error => {
+                        console.error("Geolocation error:", error.message);
+                        locationInput.value = "";
+                    }
+                );
+            } else {
+                console.log("Geolocation not supported by browser");
+                locationInput.value = "";
+            }
+
+            // Handle manual location changes
+            locationInput.addEventListener('change', () => {
+                console.log("User changed location to:", locationInput.value);
+                if (locationInput.value.trim()) {
+                    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationInput.value)}&format=json&limit=1&addressdetails=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                const { lat, lon } = data[0];
+                                latInput.value = lat;
+                                lngInput.value = lon;
+                                console.log(`Updated coordinates: lat=${lat}, lng=${lon}`);
+                            } else {
+                                console.warn("No coordinates found for:", locationInput.value);
+                                latInput.value = "";
+                                lngInput.value = "";
+                                alert("Could not geocode the location. Please enter a valid address (e.g., 'City, Country' or 'Street, City').");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Geocoding error:", error);
+                            latInput.value = "";
+                            lngInput.value = "";
+                            alert("Geocoding failed due to an error. Please check your internet connection or try a different location.");
+                        });
+                } else {
+                    latInput.value = "";
+                    lngInput.value = "";
+                }
+            });
+        });
+    </script>
+
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
-
 {% endblock %}

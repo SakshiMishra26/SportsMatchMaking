@@ -48,6 +48,8 @@ class MatchRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_requests")
     sport_type = models.CharField(max_length=50, choices=SPORT_CHOICES,default='Football')
     location = models.CharField(max_length=100)
+    latitude = models.FloatField(null=True, blank=True)  # New field
+    longitude = models.FloatField(null=True, blank=True)
     date_time = models.DateTimeField(null=True, blank=True)
     skill_level = models.CharField(max_length=20, choices=SKILL_LEVEL_CHOICES,default='Beginner')
     players_needed = models.PositiveIntegerField(default=2)

@@ -16,68 +16,75 @@
     <link rel="stylesheet" href="{% static 'aos.css' %}">
     <!-- Custom Styles -->
     <style>
-        /* Background with Blur */
         body {
-            {% comment %} background-image: url("{% static 'images/about_2.jpg' %}"); {% endcomment %}
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
             min-height: 100vh;
-            backdrop-filter: blur(8px); /* Blur the background image */
             margin: 0;
-            padding: 0;
+            padding-top: 80px; /* Adjusted to match navbar height */
             font-family: 'Mukta', sans-serif;
-            color: #fff; /* Default text color for page content */
+            color: #fff;
             font-weight: 300;
             font-size: 1.1rem;
         }
-        /* Adjust content to avoid overlap with navbar */
-        .content {
-            padding-top: 80px; /* Adjust this value based on navbar height */
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            height: 80px; /* Matches index.html navbar height */
+            background: linear-gradient(90deg, #3b82f6, #60a5fa); /* Matches index.html gradient */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Matches index.html shadow */
         }
-        /* Glassmorphism Navbar with Blue Background Matching Screenshot */
-        .navbar-glass {
-            background: rgba(71, 179, 225, 0.6); /* Adjusted blue shade to match screenshot with transparency */
-            backdrop-filter: blur(15px); /* Increased blur to match the screenshot's effect */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            padding: 0.5rem 1rem; /* Reduced padding to decrease height */
-            border-radius: 10px; /* Added slight rounding to match screenshot */
-            margin: 0 1rem; /* Add margin to align with screenshot edges */
-        }
-        /* Navbar Links */
-        .nav-link {
-            position: relative;
-            color: #1a202c; /* Dark gray color for visibility */
+        .navbar-custom .navbar-nav .nav-link {
+            color: #fff; /* Matches index.html text color */
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease;
+            position: relative;
         }
-        .nav-link:hover {
-            color: #fff; /* White on hover for contrast */
+        .navbar-custom .navbar-nav .nav-link:hover {
+            color: #a5f3fc; /* Matches index.html hover color */
         }
-        .nav-link::after {
+        .navbar-custom .navbar-nav .nav-link::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
             bottom: -5px;
             left: 0;
-            background: linear-gradient(90deg, #14b8a6, #22d3ee); /* Teal to Cyan gradient */
-            transition: width 0.3s ease-in-out;
+            background: linear-gradient(90deg, #22d3ee, #60a5fa); /* Matches index.html underline gradient */
+            transition: width 0.3s ease;
         }
-        .nav-link:hover::after {
+        .navbar-custom .navbar-nav .nav-link:hover::after {
             width: 100%;
         }
-       </style>
+        .navbar-custom .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        .site-mobile-menu {
+            height: 100vh;
+        }
+        .site-mobile-menu .nav-link {
+            color: #fff;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+        .site-mobile-menu .nav-link:hover {
+            color: #a5f3fc;
+        }
+    </style>
 </head>
 <body>
     <div class="site-wrap">
         <!-- Mobile Menu -->
-        <div class="site-mobile-menu mobile-menu fixed top-0 right-0 w-64 h-full z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
-            <div class="site-mobile-menu-header flex justify-between items-center p-4 bg-gradient-to-r from-indigo-900 to-blue-700">
+        <div class="site-mobile-menu fixed top-0 right-0 w-64 h-full z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+            <div class="site-mobile-menu-header flex justify-between items-center p-4" style="background: linear-gradient(90deg, #3b82f6, #60a5fa);">
                 <div class="site-mobile-menu-logo">
                     <a href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}" alt="Logo" class="h-8"></a>
                 </div>
@@ -85,7 +92,7 @@
                     <button class="js-menu-toggle text-white text-2xl">×</button>
                 </div>
             </div>
-            <div class="site-mobile-menu-body p-4 overflow-y-auto h-full bg-gradient-to-r from-indigo-900 to-blue-700 text-white">
+            <div class="site-mobile-menu-body p-4 overflow-y-auto h-full" style="background: linear-gradient(90deg, #3b82f6, #60a5fa);">
                 <ul class="space-y-4">
                     <li><a href="{% url 'index' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Home</a></li>
                     <li><a href="{% url 'match_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Matches</a></li>
@@ -102,109 +109,61 @@
                 </ul>
             </div>
         </div>
-    
+
         <!-- Navbar -->
-        <header class="site-navbar navbar-custom fixed top-0 w-full z-50" role="banner" data-aos="fade-down" data-aos-duration="500">
-            <nav class="navbar navbar-expand-md py-3 bg-gradient-to-r from-indigo-900 to-blue-700 shadow-lg">
-                <div class="container mx-auto px-4 flex items-center justify-between">
-                    <!-- Logo -->
-                    <a class="navbar-brand" href="{% url 'index' %}">
-                        <img src="{% static 'images/logo.png' %}" alt="Logo" class="h-10">
-                    </a>
-    
-                    <!-- Mobile Menu Toggle -->
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-    
-                    <!-- Desktop Menu -->
-                    <div class="collapse navbar-collapse justify-end" id="navbarNav">
-                        <ul class="navbar-nav space-x-6">
+        <header class="navbar-custom" role="banner" data-aos="fade-down" data-aos-duration="500">
+            <nav class="navbar navbar-expand-md container mx-auto px-4">
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo" class="h-10">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-end" id="navbarNav">
+                    <ul class="navbar-nav space-x-6">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'match_list' %}">Matches</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'create_match_request' %}">Match Request</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'team_list' %}">Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'tournament_list' %}">Tournaments</a>
+                        </li>
+                        {% if user.is_authenticated %}
                             <li class="nav-item">
-                                <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'index' %}">
-                                    Home
-                                    <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                </a>
+                                <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'match_list' %}">
-                                    Matches
-                                    <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                </a>
+                                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'create_match_request' %}">
-                                    Match Request
-                                    <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                </a>
+                                <a class="nav-link" href="{% url 'register' %}">Register</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'team_list' %}">
-                                    Teams
-                                    <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'tournament_list' %}">
-                                    Tournaments
-                                    <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                </a>
-                            </li>
-                            {% if user.is_authenticated %}
-                                <li class="nav-item">
-                                    <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'profile' user.username %}">
-                                        Profile
-                                        <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'logout' %}">
-                                        Logout
-                                        <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                    </a>
-                                </li>
-                            {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'login' %}">
-                                        Login
-                                        <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-white font-medium uppercase tracking-wide hover:text-teal-300 transition-colors duration-300 relative group" href="{% url 'register' %}">
-                                        Register
-                                        <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
+                        {% endif %}
+                    </ul>
                 </div>
             </nav>
         </header>
     </div>
-    
-    <style>
-        /* Custom Navbar Styles */
-        .navbar-custom {
-            /* Ensure the navbar height is predictable */
-            height: 80px; /* Adjust this value based on your design */
-        }
-        .navbar-custom .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-        /* Ensure content starts below the navbar */
-        body {
-            padding-top: 80px; /* Match the navbar height */
-        }
-        /* Optional: Ensure the mobile menu doesn't affect content positioning */
-        .site-mobile-menu {
-            height: 100vh; /* Full viewport height for mobile menu */
-        }
-    </style>
-    
-    <!-- JavaScript for Mobile Menu Toggle -->
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!-- AOS JS (for animations) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
+        AOS.init();
         document.addEventListener('DOMContentLoaded', function() {
             const menuToggle = document.querySelector('.js-menu-toggle');
             const mobileMenu = document.querySelector('.site-mobile-menu');
@@ -214,20 +173,6 @@
                     mobileMenu.classList.toggle('translate-x-0');
                 });
             }
-        });
-    </script>
-
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <!-- AOS JS (for animations) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
-        AOS.init();
-        // Mobile Menu Toggle
-        document.querySelector('.js-menu-toggle').addEventListener('click', function() {
-            document.querySelector('.site-mobile-menu').classList.toggle('translate-x-full');
-            document.querySelector('.site-mobile-menu').classList.toggle('translate-x-0');
         });
     </script>
 </body>

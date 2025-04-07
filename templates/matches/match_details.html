@@ -116,6 +116,16 @@
         .text-primary {
             color: #1f2937; /* Dark gray for contrast on white card */
         }
+        /* Clickable Location Link */
+        .clickable-location {
+            color: #14b8a6; /* Teal color for clickable link */
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out;
+        }
+        .clickable-location:hover {
+            color: #0f766e; /* Darker teal on hover */
+        }
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .match-card {
@@ -151,7 +161,11 @@
                     <h2 class="match-title text-4xl font-bold text-primary">{{ match.sport_type }} Match Details</h2>
 
                     <div class="space-y-5">
-                        <p class="text-lg text-primary"><strong class="font-semibold">Location:</strong> {{ match.location }}</p>
+                        <p class="text-lg text-primary"><strong class="font-semibold">Location:</strong>
+                            <span class="clickable-location" onclick="window.open('https://www.google.com/maps?q={{ match.latitude|default:match.location|urlencode }},{{ match.longitude|default:match.location|urlencode }}', '_blank');">
+                                {{ match.location }}
+                            </span>
+                        </p>
                         <p class="text-lg text-primary"><strong class="font-semibold">Date & Time:</strong> {{ match.date_time }}</p>
                         <p class="text-lg text-primary"><strong class="font-semibold">Skill Level:</strong> {{ match.skill_level }}</p>
                         <p class="text-lg text-primary"><strong class="font-semibold">Players Needed:</strong> {{ match.players_remaining }} / {{ match.players_needed }}</p>

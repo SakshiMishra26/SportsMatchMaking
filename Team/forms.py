@@ -1,10 +1,14 @@
 from django import forms
 from .models import Team, Tournament
 
+
 class TeamCreateForm(forms.ModelForm):
+    latitude = forms.FloatField(widget=forms.HiddenInput(), required=False)
+    longitude = forms.FloatField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = Team
-        fields = ['name', 'sport_type', 'skill_level', 'location']
+        fields = ['name', 'sport_type', 'skill_level', 'location', 'latitude', 'longitude']
 
 class TeamUpdateForm(forms.ModelForm):
     class Meta:

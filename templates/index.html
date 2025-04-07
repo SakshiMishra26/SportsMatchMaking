@@ -14,10 +14,11 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- AOS CSS (for animations) -->
     <link rel="stylesheet" href="{% static 'aos.css' %}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Custom Styles -->
     <style>
         body {
-            {% comment %} background-image: url("{% static 'images/about_2.jpg' %}"); {% endcomment %}
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -27,7 +28,6 @@
             font-family: 'Mukta', sans-serif;
             font-weight: 300;
             font-size: 1.1rem;
-            backdrop-filter: blur(8px); /* Blur the background image */
             padding-top: 80px;
         }
         .navbar-custom {
@@ -36,8 +36,8 @@
             width: 100%;
             z-index: 50;
             height: 80px;
-            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .navbar-custom .navbar-nav .nav-link {
             color: #fff;
@@ -48,7 +48,7 @@
             position: relative;
         }
         .navbar-custom .navbar-nav .nav-link:hover {
-            color: #14b8a6;
+            color: #a5f3fc;
         }
         .navbar-custom .navbar-nav .nav-link::after {
             content: '';
@@ -57,7 +57,7 @@
             height: 2px;
             bottom: -5px;
             left: 0;
-            background: linear-gradient(90deg, #14b8a6, #22d3ee);
+            background: linear-gradient(90deg, #a5f3fc, #22d3ee);
             transition: width 0.3s ease;
         }
         .navbar-custom .navbar-nav .nav-link:hover::after {
@@ -73,67 +73,73 @@
             justify-content: center;
             text-align: center;
             padding: 2rem;
-            background: rgba(17, 2, 2, 0.92);
+            background: rgba(17, 24, 39, 0.85);
         }
         .card-custom {
-            background: linear-gradient(135deg, #2dd4bf, #3b82f6);
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #a5f3fc, #dbeafe);
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card-custom:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transform: scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
         .card-body {
-            padding: 1.5rem;
-            color: #ffffff;
+            padding: 2rem;
+            color: #1f2937;
         }
         .inner-card {
             background: #ffffff;
-            border-radius: 10px;
-            padding: 2rem;
-            color: #333;
+            border-radius: 15px;
+            padding: 2.5rem;
+            color: #1f2937;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            min-height: 350px; /* Increased height for better centering */
+            min-height: 360px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
         .highlight-title {
-            font-size: 2.1rem; /* Larger font size */
+            font-size: 2.2rem;
             font-weight: bold;
-            background: linear-gradient(90deg, #14b8a6, #3b82f6);
+            background: linear-gradient(90deg, #22d3ee, #60a5fa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
             padding: 0.5rem 1rem;
-            border-radius: 8px;
+            border-radius: 10px;
         }
         .inner-card p {
-            font-size: 1.25rem; /* Increased size for readability */
-            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            color: #4b5563;
         }
         .carousel-item {
             background: #ffffff;
             border-radius: 15px;
             padding: 2rem;
-            color: #333;
+            color: #1f2937;
         }
         .footer-section {
-            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            background: linear-gradient(90deg, #3b82f6, #93c5fd);
             color: #fff;
             padding: 4rem 0;
         }
         .footer-section a {
-            color: #d1d5db;
+            color: #e5e7eb;
             transition: color 0.3s ease;
         }
         .footer-section a:hover {
-            color: #14b8a6;
+            color: #a5f3fc;
+        }
+        section {
+            background: linear-gradient(to bottom, rgba(243, 244, 246, 0.8), rgba(209, 213, 219, 0.5));
+            padding: 4rem 0;
         }
     </style>
 </head>
@@ -141,7 +147,7 @@
     <div class="site-wrap">
         <!-- Mobile Menu -->
         <div class="site-mobile-menu fixed top-0 right-0 w-64 h-full z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
-            <div class="site-mobile-menu-header flex justify-between items-center p-4 bg-gradient-to-r from-indigo-900 to-blue-700">
+            <div class="site-mobile-menu-header flex justify-between items-center p-4 bg-gradient-to-r from-blue-500 to-blue-300">
                 <div class="site-mobile-menu-logo">
                     <a href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}" alt="Logo" class="h-8"></a>
                 </div>
@@ -149,19 +155,19 @@
                     <button class="js-menu-toggle text-white text-2xl">×</button>
                 </div>
             </div>
-            <div class="site-mobile-menu-body p-4 overflow-y-auto h-full bg-gradient-to-r from-indigo-900 to-blue-700 text-white">
+            <div class="site-mobile-menu-body p-4 overflow-y-auto h-full bg-gradient-to-r from-blue-500 to-blue-300 text-white">
                 <ul class="space-y-4">
-                    <li><a href="{% url 'index' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Home</a></li>
-                    <li><a href="{% url 'match_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Matches</a></li>
-                    <li><a href="{% url 'create_match_request' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Match Request</a></li>
-                    <li><a href="{% url 'team_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Teams</a></li>
-                    <li><a href="{% url 'tournament_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Tournaments</a></li>
+                    <li><a href="{% url 'index' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Home</a></li>
+                    <li><a href="{% url 'match_list' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Matches</a></li>
+                    <li><a href="{% url 'create_match_request' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Match Request</a></li>
+                    <li><a href="{% url 'team_list' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Teams</a></li>
+                    <li><a href="{% url 'tournament_list' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Tournaments</a></li>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'profile' user.username %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Profile</a></li>
-                        <li><a href="{% url 'logout' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Logout</a></li>
+                        <li><a href="{% url 'profile' user.username %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Profile</a></li>
+                        <li><a href="{% url 'logout' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Logout</a></li>
                     {% else %}
-                        <li><a href="{% url 'login' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Login</a></li>
-                        <li><a href="{% url 'register' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Register</a></li>
+                        <li><a href="{% url 'login' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Login</a></li>
+                        <li><a href="{% url 'register' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Register</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -178,36 +184,17 @@
                 </button>
                 <div class="collapse navbar-collapse justify-end" id="navbarNav">
                     <ul class="navbar-nav space-x-6">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'match_list' %}">Matches</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'create_match_request' %}">Match Request</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'team_list' %}">Teams</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'tournament_list' %}">Tournaments</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">Matches</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'create_match_request' %}">Match Request</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'team_list' %}">Teams</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'tournament_list' %}">Tournaments</a></li>
                         {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.username %}">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
                         {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'register' %}">Register</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -218,7 +205,7 @@
         <section class="hero-section">
             <div class="container">
                 <h1 class="display-3 font-bold mb-4 text-shadow-lg text-white">Welcome to LocalSports</h1>
-                <p class="lead mb-5 text-white">Find and join local sports matches and tournaments</p>
+                <p class="lead mb-5 text-gray-200">Find and join local sports matches and tournaments</p>
                 <div>
                     <a href="{% url 'match_list' %}" class="btn btn-primary btn-lg m-2 shadow-lg">View Matches</a>
                     <a href="{% url 'create_match_request' %}" class="btn btn-success btn-lg m-2 shadow-lg">Request a Match</a>
@@ -227,15 +214,16 @@
         </section>
 
         <!-- Notifications Section -->
-        <section class="py-12 bg-gradient-to-br from-blue-100/50 to-cyan-100/50">            <div class="container">
-                <h2 class="text-3xl font-bold text-center mb-8 text-white">Notifications</h2>
+        <section class="py-12">
+            <div class="container">
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Notifications</h2>
                 <div class="card-custom">
                     <div class="card-body">
                         {% if request.user.is_authenticated %}
                             {% if notifications %}
                                 <ul class="list-group">
                                     {% for notification in notifications %}
-                                        <li class="list-group-item bg-white text-secondary mb-2 rounded-lg shadow-md p-3 flex justify-between items-center">
+                                        <li class="list-group-item bg-white text-gray-600 mb-2 rounded-lg shadow-md p-3 flex justify-between items-center">
                                             <span>{{ notification.message }} - <small>{{ notification.created_at|date:"F d, Y H:i" }}</small></span>
                                             <div>
                                                 <form method="POST" action="{% url 'mark_notification_read' notification.id %}" class="inline">
@@ -252,12 +240,12 @@
                                 </ul>
                             {% else %}
                                 <div class="inner-card text-center">
-                                    <p class="text-secondary">No new notifications available.</p>
+                                    <p class="text-gray-600">No new notifications available.</p>
                                 </div>
                             {% endif %}
                         {% else %}
                             <div class="inner-card text-center">
-                                <p class="text-secondary">Please log in to view your notifications.</p>
+                                <p class="text-gray-600">Please log in to view your notifications.</p>
                             </div>
                         {% endif %}
                     </div>
@@ -265,98 +253,93 @@
             </div>
         </section>
 
-<!-- About Us Section -->
-<section class="py-12 bg-gray-800/50 mt-12" data-aos="fade-up" data-aos-duration="800">
-    <div class="container">
-        <h2 class="text-3xl font-bold text-center mb-8 text-white highlight-title">About Local Sports Matchmaking</h2>
-        <div class="card-custom rounded-xl shadow-2xl overflow-hidden">
-            <div class="card-body p-6">
-                <!-- Accordion for Mission, Vision, and Team -->
-                <div class="accordion" id="aboutAccordion">
-                    <!-- Mission -->
-                    <div class="accordion-item bg-white rounded-lg mb-4 shadow-md">
-                        <h2 class="accordion-header" id="missionHeading">
-                            <button class="accordion-button bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center" type="button" data-bs-toggle="collapse" data-bs-target="#missionCollapse" aria-expanded="true" aria-controls="missionCollapse">
-                                <span>Our Mission</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </h2>
-                        <div id="missionCollapse" class="accordion-collapse collapse show" aria-labelledby="missionHeading" data-bs-parent="#aboutAccordion">
-                            <div class="accordion-body p-4 text-gray-700">
-                                <p>At Local Sports Matchmaking, we are dedicated to bringing sports enthusiasts together by connecting players, teams, and tournaments in their local communities. Our mission is to foster a vibrant, inclusive environment where everyone can enjoy the thrill of sports, from casual games to competitive events.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Vision -->
-                    <div class="accordion-item bg-white rounded-lg mb-4 shadow-md">
-                        <h2 class="accordion-header" id="visionHeading">
-                            <button class="accordion-button bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#visionCollapse" aria-expanded="false" aria-controls="visionCollapse">
-                                <span>Our Vision</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </h2>
-                        <div id="visionCollapse" class="accordion-collapse collapse" aria-labelledby="visionHeading" data-bs-parent="#aboutAccordion">
-                            <div class="accordion-body p-4 text-gray-700">
-                                <p>We envision a world where local sports are accessible to all, breaking barriers and building stronger communities through the power of play. By leveraging technology, we aim to simplify matchmaking and elevate the sports experience for everyone.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Team -->
-                    <div class="accordion-item bg-white rounded-lg shadow-md">
-                        <h2 class="accordion-header" id="teamHeading">
-                            <button class="accordion-button bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#teamCollapse" aria-expanded="false" aria-controls="teamCollapse">
-                                <span>Meet Our Team</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </h2>
-                        <div id="teamCollapse" class="accordion-collapse collapse" aria-labelledby="teamHeading" data-bs-parent="#aboutAccordion">
-                            <div class="accordion-body p-4 text-gray-700">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div class="text-center">
-                                        <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
-                                            <img src="{% static 'images/team1.jpg' %}" alt="John Doe" class="w-full h-full object-cover">
-                                        </div>
-                                        <h4 class="text-lg font-semibold">John Doe</h4>
-                                        <p class="text-sm text-gray-600">Founder & CEO</p>
+        <!-- About Us Section -->
+        <section class="py-12" data-aos="fade-up" data-aos-duration="800">
+            <div class="container">
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800 highlight-title">About Local Sports Matchmaking</h2>
+                <div class="card-custom rounded-xl shadow-2xl overflow-hidden">
+                    <div class="card-body p-6">
+                        <div class="accordion" id="aboutAccordion">
+                            <!-- Mission -->
+                            <div class="accordion-item bg-white rounded-lg mb-4 shadow-md">
+                                <h2 class="accordion-header" id="missionHeading">
+                                    <button class="accordion-button bg-gradient-to-r from-blue-500 to-blue-400 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center" type="button" data-bs-toggle="collapse" data-bs-target="#missionCollapse" aria-expanded="true" aria-controls="missionCollapse">
+                                        <span>Our Mission</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </h2>
+                                <div id="missionCollapse" class="accordion-collapse collapse show" aria-labelledby="missionHeading" data-bs-parent="#aboutAccordion">
+                                    <div class="accordion-body p-4 text-gray-700">
+                                        <p>At Local Sports Matchmaking, we are dedicated to bringing sports enthusiasts together by connecting players, teams, and tournaments in their local communities. Our mission is to foster a vibrant, inclusive environment where everyone can enjoy the thrill of sports, from casual games to competitive events.</p>
                                     </div>
-                                    <div class="text-center">
-                                        <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
-                                            <img src="{% static 'images/team2.jpg' %}" alt="Jane Smith" class="w-full h-full object-cover">
-                                        </div>
-                                        <h4 class="text-lg font-semibold">Jane Smith</h4>
-                                        <p class="text-sm text-gray-600">Community Manager</p>
+                                </div>
+                            </div>
+                            <!-- Vision -->
+                            <div class="accordion-item bg-white rounded-lg mb-4 shadow-md">
+                                <h2 class="accordion-header" id="visionHeading">
+                                    <button class="accordion-button bg-gradient-to-r from-blue-500 to-blue-400 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#visionCollapse" aria-expanded="false" aria-controls="visionCollapse">
+                                        <span>Our Vision</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </h2>
+                                <div id="visionCollapse" class="accordion-collapse collapse" aria-labelledby="visionHeading" data-bs-parent="#aboutAccordion">
+                                    <div class="accordion-body p-4 text-gray-700">
+                                        <p>We envision a world where local sports are accessible to all, breaking barriers and building stronger communities through the power of play. By leveraging technology, we aim to simplify matchmaking and elevate the sports experience for everyone.</p>
                                     </div>
-                                    <div class="text-center">
-                                        <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
-                                            <img src="{% static 'images/team3.jpg' %}" alt="Mike Johnson" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <!-- Team -->
+                            <div class="accordion-item bg-white rounded-lg shadow-md">
+                                <h2 class="accordion-header" id="teamHeading">
+                                    <button class="accordion-button bg-gradient-to-r from-blue-500 to-blue-400 text-white font-semibold py-3 px-4 rounded-t-lg w-full text-left flex justify-between items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#teamCollapse" aria-expanded="false" aria-controls="teamCollapse">
+                                        <span>Meet Our Team</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </h2>
+                                <div id="teamCollapse" class="accordion-collapse collapse" aria-labelledby="teamHeading" data-bs-parent="#aboutAccordion">
+                                    <div class="accordion-body p-4 text-gray-700">
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div class="text-center">
+                                                <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
+                                                    <img src="{% static 'images/team1.jpg' %}" alt="John Doe" class="w-full h-full object-cover">
+                                                </div>
+                                                <h4 class="text-lg font-semibold">John Doe</h4>
+                                                <p class="text-sm text-gray-600">Founder & CEO</p>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
+                                                    <img src="{% static 'images/team2.jpg' %}" alt="Jane Smith" class="w-full h-full object-cover">
+                                                </div>
+                                                <h4 class="text-lg font-semibold">Jane Smith</h4>
+                                                <p class="text-sm text-gray-600">Community Manager</p>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="rounded-full bg-gray-200 w-20 h-20 mx-auto mb-2 overflow-hidden">
+                                                    <img src="{% static 'images/team3.jpg' %}" alt="Mike Johnson" class="w-full h-full object-cover">
+                                                </div>
+                                                <h4 class="text-lg font-semibold">Mike Johnson</h4>
+                                                <p class="text-sm text-gray-600">Tech Lead</p>
+                                            </div>
                                         </div>
-                                        <h4 class="text-lg font-semibold">Mike Johnson</h4>
-                                        <p class="text-sm text-gray-600">Tech Lead</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="text-center mt-6">
+                            <p class="text-gray-700 mb-4">Join us in building a stronger sports community!</p>
+                            <a href="{% url 'match_list' %}" class="btn btn-custom bg-gradient-to-r from-teal-400 to-cyan-400 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-gradient-to-r hover:from-teal-500 hover:to-cyan-500 hover:shadow-xl transition duration-300">
+                                Get Started
+                            </a>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Call to Action -->
-                <div class="text-center mt-6">
-                    <p class="text-white mb-4">Join us in building a stronger sports community!</p>
-                    <a href="{% url 'match_list' %}" class="btn btn-custom bg-gradient-to-r from-teal-400 to-cyan-500 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-gradient-to-r hover:from-teal-500 hover:to-cyan-600 hover:shadow-xl transition duration-300">
-                        Get Started
-                    </a>
-                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- Upcoming Matches Section -->
-        <section class="py-12 bg-gray-800/50">
+        <section class="py-12">
             <div class="container">
-                <h2 class="text-3xl font-bold text-center mb-8 text-white">Upcoming Matches</h2>
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Upcoming Matches</h2>
                 <div class="card-custom">
                     <div class="card-body">
                         {% if matches %}
@@ -390,42 +373,43 @@
                 </div>
             </div>
         </section>
-        <!-- Featured Tournaments Section -->
 
-<section class="py-12 bg-gray-800/50">
-    <div class="container">
-        <h2 class="text-3xl font-bold text-center mb-8 text-white">Featured Tournaments</h2>
-        <div class="card-custom">
-            <div class="card-body">
-                {% if tournaments %}
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {% for tournament in tournaments|slice:":3" %}
-                            <div class="inner-card p-4">
-                                <h3 class="highlight-title text-center">{{ tournament.name }}</h3>
-                                <h5 class="highlight-title text-center">{{ tournament.sport_type }}</h5>
-                                <p class="mb-2"><strong>📍 Location:</strong> {{ tournament.location }}</p>
-                                <p class="mb-2"><strong>📅 Start Date:</strong> {{ tournament.start_date|date:"F d, Y" }}</p>
-                                <p class="mb-2"><strong>📅 End Date:</strong> {{ tournament.end_date|date:"F d, Y" }}</p>
-                                <p class="mb-2"><strong>🏆 Teams Participating:</strong> {{ tournament.teams.count }}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <div class="text-center mt-6">
-                        <a href="{% url 'tournament_list' %}" class="btn btn-primary btn-lg shadow-lg">View All Tournaments</a>
-                    </div>
-                {% else %}
-                    <div class="inner-card text-center">
-                        <p class="text-gray-700">No tournaments available.</p>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</section>
-        <!-- Teams Section -->
-        <section class="py-12 bg-gray-800/50">
+        <!-- Featured Tournaments Section -->
+        <section class="py-12">
             <div class="container">
-                <h2 class="text-3xl font-bold text-center mb-8 text-white">Teams</h2>
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Featured Tournaments</h2>
+                <div class="card-custom">
+                    <div class="card-body">
+                        {% if tournaments %}
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {% for tournament in tournaments|slice:":3" %}
+                                    <div class="inner-card p-4">
+                                        <h3 class="highlight-title text-center">{{ tournament.name }}</h3>
+                                        <h5 class="highlight-title text-center">{{ tournament.sport_type }}</h5>
+                                        <p class="mb-2"><strong>📍 Location:</strong> {{ tournament.location }}</p>
+                                        <p class="mb-2"><strong>📅 Start Date:</strong> {{ tournament.start_date|date:"F d, Y" }}</p>
+                                        <p class="mb-2"><strong>📅 End Date:</strong> {{ tournament.end_date|date:"F d, Y" }}</p>
+                                        <p class="mb-2"><strong>🏆 Teams Participating:</strong> {{ tournament.teams.count }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="text-center mt-6">
+                                <a href="{% url 'tournament_list' %}" class="btn btn-primary btn-lg shadow-lg">View All Tournaments</a>
+                            </div>
+                        {% else %}
+                            <div class="inner-card text-center">
+                                <p class="text-gray-700">No tournaments available.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teams Section -->
+        <section class="py-12">
+            <div class="container">
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Teams</h2>
                 <div class="card-custom">
                     <div class="card-body">
                         {% if teams %}
@@ -453,11 +437,11 @@
         </section>
 
         <!-- Game Highlights Section -->
-      {% comment %}  <section class="py-12 bg-gray-800/50">
+        <section class="py-12">
             <div class="container">
-                <h2 class="text-3xl font-bold text-center mb-8 text-white">More Game Highlights</h2>
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">More Game Highlights</h2>
                 <div class="card-custom">
-                    {% comment %} <div class="card-body">
+                    <div class="card-body">
                         <div class="owl-carousel owl-theme">
                             <div class="carousel-item">
                                 <img src="{% static 'images/about_2.jpg' %}" alt="Highlight" class="rounded-lg w-full h-64 object-cover">
@@ -484,15 +468,15 @@
                                 <p class="text-gray-700">Exciting matches and moments!</p>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
-        </section> {% endcomment %}
+        </section>
 
         <!-- Latest Sports News Section -->
-        <section class="py-12 bg-gray-800/50">
+        <section class="py-12">
             <div class="container">
-                <h2 class="text-3xl font-bold text-center mb-8 text-white">Latest Sports News</h2>
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Latest Sports News</h2>
                 <div class="card-custom">
                     <div class="card-body">
                         {% if articles %}
@@ -527,36 +511,36 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div>
                         <h3 class="text-2xl font-bold mb-4 text-white">About Sportz</h3>
-                        <p class="text-gray-300">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe pariatur reprehenderit vero atque, consequatur id ratione.</p>
+                        <p class="text-gray-200">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe pariatur reprehenderit vero atque, consequatur id ratione.</p>
                     </div>
                     <div>
                         <h3 class="text-2xl font-bold mb-4 text-white">Quick Links</h3>
                         <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-300 hover:text-teal-300">Home</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-teal-300">Matches</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-teal-300">News</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-teal-300">Teams</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-teal-300">About Us</a></li>
+                            <li><a href="#" class="text-gray-200 hover:text-teal-200">Home</a></li>
+                            <li><a href="#" class="text-gray-200 hover:text-teal-200">Matches</a></li>
+                            <li><a href="#" class="text-gray-200 hover:text-teal-200">News</a></li>
+                            <li><a href="#" class="text-gray-200 hover:text-teal-200">Teams</a></li>
+                            <li><a href="#" class="text-gray-200 hover:text-teal-200">About Us</a></li>
                         </ul>
                     </div>
                     <div>
                         <h3 class="text-2xl font-bold mb-4 text-white">Connect With Us</h3>
                         <div class="flex space-x-4 mb-4">
-                            <a href="#" class="text-gray-300 hover:text-teal-300"><span class="icon-facebook"></span></a>
-                            <a href="#" class="text-gray-300 hover:text-teal-300"><span class="icon-twitter"></span></a>
-                            <a href="#" class="text-gray-300 hover:text-teal-300"><span class="icon-instagram"></span></a>
-                            <a href="#" class="text-gray-300 hover:text-teal-300"><span class="icon-linkedin"></span></a>
+                            <a href="#" class="text-gray-200 hover:text-teal-200"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-gray-200 hover:text-teal-200"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-gray-200 hover:text-teal-200"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-gray-200 hover:text-teal-200"><i class="fab fa-linkedin"></i></a>
                         </div>
                         <h3 class="text-2xl font-bold mb-2 text-white">Newsletter</h3>
-                        <p class="text-gray-300 mb-2">Stay updated with the latest sports news!</p>
+                        <p class="text-gray-200 mb-2">Stay updated with the latest sports news!</p>
                         <form class="flex">
-                            <input type="email" placeholder="Enter Email" class="form-control bg-transparent text-white border border-gray-300 rounded-l-lg p-2">
-                            <button type="submit" class="btn btn-teal-500 bg-teal-600 text-white rounded-r-lg p-2">Subscribe</button>
+                            <input type="email" placeholder="Enter Email" class="form-control bg-transparent text-white border border-gray-200 rounded-l-lg p-2">
+                            <button type="submit" class="btn bg-teal-500 text-white rounded-r-lg p-2">Subscribe</button>
                         </form>
                     </div>
                 </div>
                 <div class="text-center mt-8">
-                    {% comment %} <p class="text-gray-300">© 2025 Sportz. All rights reserved | Designed with <span class="text-red-500">♥</span> by <a href="https://colorlib.com" target="_blank" class="text-teal-300">Colorlib</a></p> {% endcomment %}
+                    <p class="text-gray-200">© 2025 Sportz. All rights reserved</p>
                 </div>
             </div>
         </footer>

@@ -18,6 +18,8 @@ class Team(models.Model):
     sport_type = models.CharField(max_length=50, choices=SPORT_CHOICES)
     skill_level = models.CharField(max_length=50, choices=SKILL_LEVEL_CHOICES, default='Beginner')
     location = models.CharField(max_length=100, default="Unknown")
+    latitude = models.FloatField(null=True, blank=True)  # New field
+    longitude = models.FloatField(null=True, blank=True)
     captain = models.ForeignKey(User, on_delete=models.CASCADE, related_name="captained_teams")
     players = models.ManyToManyField(User, related_name="teams", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -46,6 +48,8 @@ class Tournament(models.Model):
     name = models.CharField(max_length=100)
     sport_type = models.CharField(max_length=50, choices=SPORT_CHOICES)
     location = models.CharField(max_length=100)
+    latitude = models.FloatField(null=True, blank=True)  # New field
+    longitude = models.FloatField(null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     teams = models.ManyToManyField(Team, related_name="tournaments", blank=True)
@@ -55,7 +59,6 @@ class Tournament(models.Model):
     required_team_size = models.IntegerField(default=0)  # Temporary default for migrations
 
     def save(self, *args, **kwargs):
-        # Ensure required_team_size is set based on sport_type
         self.required_team_size = self.SPORT_TEAM_SIZES.get(self.sport_type, 0)
         super().save(*args, **kwargs)
 

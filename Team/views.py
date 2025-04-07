@@ -6,14 +6,50 @@ from .forms import TeamCreateForm, TeamUpdateForm, TeamFilterForm, TournamentFor
 from Localsports.models import Notification
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
+import requests
+from geopy.geocoders import Nominatim
+
+# @login_required
+# def create_team(request):
+#     if request.method == 'POST':
+#         form = TeamCreateForm(request.POST)
+#         if form.is_valid():
+#             team = form.save(commit=False)
+#             team.captain = request.user
+#             team.save()
+#             team.players.add(request.user)
+#             messages.success(request, "Team created successfully!")
+#             return redirect('team_list')
+#     else:
+#         form = TeamCreateForm()
+#     return render(request, 'teams/create_team.html', {'form': form})
+from geopy.geocoders import Nominatim
+from django.conf import settings
 
 @login_required
 def create_team(request):
+    geolocator = Nominatim(user_agent="sports_matchmaking")
     if request.method == 'POST':
         form = TeamCreateForm(request.POST)
         if form.is_valid():
             team = form.save(commit=False)
             team.captain = request.user
+            team.latitude = form.cleaned_data['latitude']
+            team.longitude = form.cleaned_data['longitude']
+            if not team.latitude or not team.longitude:
+                try:
+                    location = geolocator.geocode(team.location)
+                    if location:
+                        team.latitude = location.latitude
+                        team.longitude = location.longitude
+                        print(f"Geocoded {team.location} to lat={team.latitude}, lng={team.longitude}")
+                    else:
+                        print(f"Geocoding failed for {team.location}")
+                        messages.warning(request, "Could not geocode location automatically. Using manual location.")
+                except Exception as e:
+                    print(f"Geocoding error: {e}")
+                    messages.warning(request, "Geocoding failed. Using manual location without coordinates.")
             team.save()
             team.players.add(request.user)
             messages.success(request, "Team created successfully!")
@@ -21,6 +57,7 @@ def create_team(request):
     else:
         form = TeamCreateForm()
     return render(request, 'teams/create_team.html', {'form': form})
+
 
 def team_list(request):
     teams = Team.objects.all()
@@ -92,6 +129,40 @@ def manage_team(request, team_id):
         form = TeamUpdateForm(instance=team)
     return render(request, 'teams/manage_team.html', {'form': form, 'team': team})
 
+# @login_required
+# def create_tournament(request):
+#     if request.method == "POST":
+#         form = TournamentForm(request.POST)
+#         if form.is_valid():
+#             tournament = form.save(commit=False)
+#             tournament.created_by = request.user
+#             tournament.save()
+#             # Send email to creator
+#             subject = f"New Tournament Created: {tournament.name}"
+#             message = (
+#                 f"Dear {request.user.username},\n\n"
+#                 f"You have successfully created a new tournament:\n"
+#                 f"Name: {tournament.name}\n"
+#                 f"Sport Type: {tournament.sport_type}\n"
+#                 f"Location: {tournament.location}\n"
+#                 f"Start Date: {tournament.start_date}\n"
+#                 f"End Date: {tournament.end_date}\n"
+#                 f"Required Team Size: {tournament.required_team_size}\n\n"
+#                 f"Thank you for organizing this event!"
+#             )
+#             send_mail(
+#                 subject,
+#                 message,
+#                 settings.EMAIL_HOST_USER,
+#                 [request.user.email],
+#                 fail_silently=False,
+#             )
+#             messages.success(request, "Tournament created successfully!")
+#             return redirect('tournament_list')
+#     else:
+#         form = TournamentForm()
+#     return render(request, "tournaments/create_tournament.html", {"form": form})
+
 @login_required
 def create_tournament(request):
     if request.method == "POST":
@@ -99,6 +170,22 @@ def create_tournament(request):
         if form.is_valid():
             tournament = form.save(commit=False)
             tournament.created_by = request.user
+            tournament.latitude = request.POST.get('latitude', None)
+            tournament.longitude = request.POST.get('longitude', None)
+            if not tournament.latitude or not tournament.longitude:
+                try:
+                    geolocator = Nominatim(user_agent="sports_matchmaking")
+                    location = geolocator.geocode(tournament.location)
+                    if location:
+                        tournament.latitude = location.latitude
+                        tournament.longitude = location.longitude
+                        print(f"Geocoded {tournament.location} to lat={tournament.latitude}, lng={tournament.longitude}")
+                    else:
+                        print(f"Geocoding failed for {tournament.location}")
+                        messages.warning(request, "Could not geocode location automatically. Using manual location.")
+                except Exception as e:
+                    print(f"Geocoding error: {e}")
+                    messages.warning(request, "Geocoding failed. Using manual location without coordinates.")
             tournament.save()
             # Send email to creator
             subject = f"New Tournament Created: {tournament.name}"
@@ -125,6 +212,8 @@ def create_tournament(request):
     else:
         form = TournamentForm()
     return render(request, "tournaments/create_tournament.html", {"form": form})
+
+
 
 @login_required
 def join_tournament(request, tournament_id):
@@ -187,9 +276,17 @@ def join_tournament(request, tournament_id):
 
     return render(request, 'tournaments/join_tournament.html', {'form': form, 'tournament': tournament})
 def tournament_list(request):
+    current_date = timezone.now().date()  # Current date: April 07, 2025
     tournaments = Tournament.objects.all().order_by('start_date')
-    return render(request, "tournaments/tournament_list.html", {"tournaments": tournaments})
+    
+    # Separate current and past tournaments
+    current_tournaments = tournaments.filter(end_date__gte=current_date)
+    past_tournaments = tournaments.filter(end_date__lt=current_date)
 
+    return render(request, "tournaments/tournament_list.html", {
+        "current_tournaments": current_tournaments,
+        "past_tournaments": past_tournaments
+    })
 def tournament_detail(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     return render(request, "tournaments/tournament_detail.html", {"tournament": tournament})

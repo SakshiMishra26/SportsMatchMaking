@@ -1,15 +1,131 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/Reg.css' %}">
     <title>Registration Form</title>
+    <style>
+        /* Override and enhance styles from Reg.css */
+        .div1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: url(c5.jpg);
+            background-position: center;
+            background-size: cover;
+        }
+        .form-box {
+            width: 100%;
+            max-width: 400px; /* Slightly wider for better spacing */
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            overflow-y: auto !important;
+            height: auto !important;
+            min-height: 500px; /* Adjusted for content */
+        }
+        .button-box {
+            width: 220px;
+            margin: 0 auto 30px; /* Centered with more bottom margin */
+            box-shadow: 0 0 10px rgba(255, 97, 36, 0.2); /* Softer shadow */
+            border-radius: 30px;
+            background: #f0f0f0; /* Light background for toggle */
+        }
+        .toggle-btn {
+            padding: 10px 30px;
+            font-weight: 500;
+            color: #333;
+            transition: color 0.3s;
+        }
+        .toggle-btn:hover {
+            color: #1e3a8a; /* Darker blue on hover */
+        }
+        #btn {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 30px;
+            transition: left 0.5s;
+        }
+        .input-group {
+            position: static !important;
+            width: 100% !important;
+            top: auto !important;
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Consistent spacing between fields */
+        }
+        #login, #register {
+            position: static !important;
+            opacity: 1 !important;
+        }
+        .input-field, select {
+            width: 100%;
+            padding: 12px 15px; /* More padding for comfort */
+            margin: 0; /* Remove margin from Reg.css */
+            border: 1px solid #ccc; /* Full border instead of just bottom */
+            border-radius: 8px; /* Rounded corners */
+            outline: none;
+            background: #fff; /* White background */
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .input-field:focus, select:focus {
+            border-color: #3b82f6; /* Blue border on focus */
+            box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); /* Subtle glow */
+        }
+        .submit-btn {
+            width: 100% !important; /* Full width */
+            padding: 12px !important; /* Consistent padding */
+            margin: 20px auto 0 !important; /* Centered with top margin */
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.3s, transform 0.1s;
+        }
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #1e3a8a, #4b9bff); /* Lighter gradient on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+        .check-box {
+            margin: 10px 10px 10px 0 !important; /* Adjusted spacing */
+        }
+        label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+            display: block; /* Ensure labels are on their own line */
+        }
+        span {
+            position: static !important; /* Remove absolute positioning */
+            color: #777;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .form-box {
+                padding: 15px;
+                max-width: 90%;
+            }
+            .button-box {
+                width: 200px;
+            }
+            .toggle-btn {
+                padding: 10px 20px;
+            }
+            #btn {
+                width: 100px;
+            }
+        }
+    </style>
 </head>
-
 <body>
     {% if messages %}
     <script>
@@ -31,28 +147,36 @@
             <!-- Login Form -->
             <form id="login" class="input-group" method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
-                <input type="text" class="input-field" name="username" placeholder="User ID" required>
-                <input type="password" class="input-field" name="password" placeholder="Password" required>
-                <input type="checkbox" class="check-box"> <span>Remember Password</span>
-                <button type="submit" class="submit-btn">Log in</button>
-                {% comment %} <p><a href="/accounts/password-reset/">Forgot Password?</a></p> {% endcomment %}
+                <label for="username">User ID</label>
+                <input type="text" class="input-field" name="username" id="username" placeholder="Enter User ID" required>
+                <label for="password">Password</label>
+                <input type="password" class="input-field" name="password" id="password" placeholder="Enter Password" required>
+                <div style="display: flex; align-items: center;">
+                    <input type="checkbox" class="check-box" id="remember">
+                    <span>Remember Password</span>
+                </div>
+                <button type="submit" class="submit-btn">Log In</button>
             </form>
 
             <!-- Registration Form -->
             <form id="register" class="input-group" method="POST" action="{% url 'register' %}">
                 {% csrf_token %}
+                <label for="email">Email</label>
                 <input type="email" class="input-field" name="email" id="email" placeholder="Enter Email" value="{{ email }}" required>
-                {% comment %} <button type="button" id="send-otp-btn" class="submit-btn" onclick="sendOTP()">Send OTP</button>
-                {% if otp_sent %}
-                <input type="text" class="input-field" name="otp" id="otp" placeholder="Enter OTP" required>
-                {% endif %} {% endcomment %}
-                <input type="text" class="input-field" name="username" placeholder="User ID" required>
-                <input type="password" class="input-field" name="password1" id="password1" placeholder="Password" required>
+                <label for="username">User ID</label>
+                <input type="text" class="input-field" name="username" id="username" placeholder="Enter User ID" required>
+                <label for="password1">Password</label>
+                <input type="password" class="input-field" name="password1" id="password1" placeholder="Enter Password" required>
+                <label for="password2">Confirm Password</label>
                 <input type="password" class="input-field" name="password2" id="password2" placeholder="Confirm Password" required>
-                <input type="text" class="input-field" name="location" placeholder="Location" required>
-                <input type="text" class="input-field" name="sports" placeholder="Sports (e.g., Football, Basketball)" required>
-                <label>Skill Level</label><br><br>
-                <select name="skill_level" required>
+                <label for="id_location">Location</label>
+                <input type="text" class="input-field" name="location" id="id_location" placeholder="Enter Location (e.g., Berlin)" required>
+                <input type="hidden" name="latitude" id="id_latitude">
+                <input type="hidden" name="longitude" id="id_longitude">
+                <label for="sports">Sports</label>
+                <input type="text" class="input-field" name="sports" id="sports" placeholder="Sports (e.g., Football, Basketball)" required>
+                <label for="skill_level">Skill Level</label>
+                <select name="skill_level" id="skill_level" required class="input-field">
                     <option value="Beginner">Beginner</option>
                     <option value="Intermediate">Intermediate</option>
                     <option value="Advanced">Advanced</option>
@@ -63,22 +187,33 @@
     </div>
 
     <script>
-        var x = document.getElementById("login");
-        var y = document.getElementById("register");
-        var z = document.getElementById("btn");
+        var loginForm = document.getElementById("login");
+        var registerForm = document.getElementById("register");
+        var btn = document.getElementById("btn");
 
-        function register() {
-            x.style.display = "none";  // Hide login form
-            y.style.display = "block"; // Show register form
-            y.style.opacity = "1";     // Make it visible
-        }
+        // Set initial state
+        loginForm.style.display = "block";
+        registerForm.style.display = "none";
+        btn.style.left = "0";
 
         function login() {
-            y.style.display = "none";  // Hide register form
-            x.style.display = "block"; // Show login form
+            console.log("Switching to login form");
+            loginForm.style.display = "block";
+            registerForm.style.display = "none";
+            btn.style.left = "0";
+        }
+
+        function register() {
+            console.log("Switching to register form");
+            loginForm.style.display = "none";
+            registerForm.style.display = "block";
+            registerForm.style.opacity = "1";
+            btn.style.left = "50%";
+            autoFillLocation();
         }
 
         document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOM loaded, setting up form validation");
             document.getElementById("register").addEventListener("submit", function (event) {
                 var password = document.getElementById("password1").value;
                 var confirmPassword = document.getElementById("password2").value;
@@ -99,25 +234,70 @@
             });
         });
 
-        function sendOTP() {
-            var email = document.getElementById("email").value;
-            if (!email.includes("@")) {
-                alert("Please enter a valid email address.");
-                return;
+        function autoFillLocation() {
+            const locationInput = document.getElementById('id_location');
+            const latInput = document.getElementById('id_latitude');
+            const lngInput = document.getElementById('id_longitude');
+
+            if (navigator.geolocation) {
+                console.log("Requesting geolocation...");
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        console.log(`Geolocation received: lat=${lat}, lng=${lng}`);
+
+                        latInput.value = lat;
+                        lngInput.value = lng;
+
+                        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.display_name) {
+                                    console.log("Address received:", data.display_name);
+                                    locationInput.value = data.display_name;
+                                } else {
+                                    console.log("No address found, user can enter manually");
+                                    locationInput.value = "";
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Reverse geocoding error:", error);
+                                locationInput.value = "";
+                            });
+                    },
+                    error => {
+                        console.error("Geolocation error:", error);
+                        locationInput.value = "";
+                    }
+                );
+            } else {
+                console.log("Geolocation not supported by browser");
+                locationInput.value = "";
             }
 
-            // Show OTP field after clicking Send OTP
-            document.getElementById("otp").style.display = "block";
-
-            // Create a hidden input to send OTP request
-            var form = document.getElementById("register");
-            var otpRequest = document.createElement("input");
-            otpRequest.type = "hidden";
-            otpRequest.name = "send_otp";
-            otpRequest.value = "true";
-            form.appendChild(otpRequest);
-
-            form.submit();  // Submit form to send OTP
+            locationInput.addEventListener('change', () => {
+                console.log("User changed location to:", locationInput.value);
+                fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationInput.value)}&format=json&limit=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            const { lat, lon } = data[0];
+                            latInput.value = lat;
+                            lngInput.value = lon;
+                            console.log(`Updated coordinates: lat=${lat}, lng=${lon}`);
+                        } else {
+                            console.log("No coordinates found for custom location");
+                            latInput.value = "";
+                            lngInput.value = "";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Geocoding error:", error);
+                        latInput.value = "";
+                        lngInput.value = "";
+                    });
+            });
         }
     </script>
 </body>
