@@ -1,0 +1,25 @@
+{% include 'navbar.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Find Friends</h2>
+    {% if users %}
+        <ul class="list-group">
+            {% for user in users %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ user.username }}
+                    {% if user.id in accepted_friends %}
+                        <span class="badge bg-success">Friend</span>
+                    {% elif user.id in sent_requests %}
+                        <span class="badge bg-warning">Request Sent</span>
+                    {% else %}
+                        <a href="{% url 'chat:send_friend_request' user.id %}" class="btn btn-primary btn-sm">Send Friend Request</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users available to add as friends.</p>
+    {% endif %}
+    <a href="{% url 'chat:manage_friend_requests' %}" class="btn btn-info mt-3">Manage Friend Requests</a>
+</div>
+{% endblock %}

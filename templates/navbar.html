@@ -5,16 +5,10 @@
     <title>Sportz — Modern Sports Team Template</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Google Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- AOS CSS (for animations) -->
     <link rel="stylesheet" href="{% static 'aos.css' %}">
-    <!-- Custom Styles -->
     <style>
         body {
             background-size: cover;
@@ -23,7 +17,7 @@
             background-attachment: fixed;
             min-height: 100vh;
             margin: 0;
-            padding-top: 80px; /* Adjusted to match navbar height */
+            padding-top: 80px;
             font-family: 'Mukta', sans-serif;
             color: #fff;
             font-weight: 300;
@@ -34,12 +28,12 @@
             top: 0;
             width: 100%;
             z-index: 50;
-            height: 80px; /* Matches index.html navbar height */
-            background: linear-gradient(90deg, #3b82f6, #60a5fa); /* Matches index.html gradient */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Matches index.html shadow */
+            height: 80px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .navbar-custom .navbar-nav .nav-link {
-            color: #fff; /* Matches index.html text color */
+            color: #fff;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -47,7 +41,7 @@
             position: relative;
         }
         .navbar-custom .navbar-nav .nav-link:hover {
-            color: #a5f3fc; /* Matches index.html hover color */
+            color: #a5f3fc;
         }
         .navbar-custom .navbar-nav .nav-link::after {
             content: '';
@@ -56,7 +50,7 @@
             height: 2px;
             bottom: -5px;
             left: 0;
-            background: linear-gradient(90deg, #22d3ee, #60a5fa); /* Matches index.html underline gradient */
+            background: linear-gradient(90deg, #22d3ee, #60a5fa);
             transition: width 0.3s ease;
         }
         .navbar-custom .navbar-nav .nav-link:hover::after {
@@ -99,6 +93,10 @@
                     <li><a href="{% url 'create_match_request' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Match Request</a></li>
                     <li><a href="{% url 'team_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Teams</a></li>
                     <li><a href="{% url 'tournament_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Tournaments</a></li>
+                    <li><a href="{% url 'chat:user_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Friends</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'chat:friends_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Messages</a></li>
+                    {% endif %}
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'profile' user.username %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Profile</a></li>
                         <li><a href="{% url 'logout' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Logout</a></li>
@@ -121,46 +119,36 @@
                 </button>
                 <div class="collapse navbar-collapse justify-end" id="navbarNav">
                     <ul class="navbar-nav space-x-6">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'match_list' %}">Matches</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'create_match_request' %}">Match Request</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'team_list' %}">Teams</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'tournament_list' %}">Tournaments</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">Matches</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'create_match_request' %}">Match Request</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'team_list' %}">Teams</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'tournament_list' %}">Tournaments</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'chat:user_list' %}">Friends</a></li>
                         {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'chat:friends_list' %}">Messages</a></li>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.username %}">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
                         {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'register' %}">Register</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
                         {% endif %}
                     </ul>
                 </div>
             </nav>
         </header>
+
+        <!-- Content Block -->
+        <main>
+            {% block content %}
+            {% endblock content %}
+        </main>
     </div>
 
-    <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <!-- AOS JS (for animations) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
         AOS.init();

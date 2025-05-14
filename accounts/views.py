@@ -12,6 +12,8 @@ from .forms import CustomUserCreationForm  # Import the custom form
 from django.contrib import messages  # Import messages
 from geopy.geocoders import Nominatim
 from django.conf import settings
+from chat.models import FriendRequest
+from django.db import models  # For Q objects
 
 # @login_required
 # def profile(request, username):
@@ -39,7 +41,11 @@ from django.conf import settings
 def profile(request, username):
     user = get_object_or_404(User, username=username)
     profile, created = UserProfile.objects.get_or_create(user=user)
-
+    friend_requests = FriendRequest.objects.filter(to_user=request.user, status='pending')
+    friends = User.objects.filter(
+        models.Q(sent_requests__to_user=request.user, sent_requests__status='accepted') |
+        models.Q(received_requests__from_user=request.user, received_requests__status='accepted')
+    ).distinct()
     if request.method == "POST":
         profile.location = request.POST.get('location', profile.location)
         profile.latitude = request.POST.get('latitude', profile.latitude)
@@ -58,6 +64,8 @@ def profile(request, username):
     return render(request, 'profile.html', {
         'profile': profile, 
         'user': user,
+        'friend_requests': friend_requests,
+        'friends': friends,
         'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
     })
 

@@ -162,6 +162,11 @@
                     <li><a href="{% url 'create_match_request' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Match Request</a></li>
                     <li><a href="{% url 'team_list' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Teams</a></li>
                     <li><a href="{% url 'tournament_list' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Tournaments</a></li>
+                    <li><a href="{% url 'chat:user_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Friends</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'chat:friends_list' %}" class="nav-link block py-2 hover:text-teal-300 transition-colors duration-300">Messages</a></li>
+                    {% endif %}
+
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'profile' user.username %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Profile</a></li>
                         <li><a href="{% url 'logout' %}" class="nav-link block py-2 hover:text-teal-200 transition-colors duration-300">Logout</a></li>
@@ -189,6 +194,17 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'create_match_request' %}">Match Request</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'team_list' %}">Teams</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'tournament_list' %}">Tournaments</a></li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'chat:user_list' %}">Friends</a>
+                        </li>
+                        <!-- Messages Link (Authenticated Users Only) -->
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'chat:friends_list' %}">Messages</a>
+                            </li>
+                        {% endif %}
+
                         {% if user.is_authenticated %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.username %}">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
@@ -436,43 +452,7 @@
             </div>
         </section>
 
-        <!-- Game Highlights Section -->
-        <section class="py-12">
-            <div class="container">
-                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">More Game Highlights</h2>
-                <div class="card-custom">
-                    <div class="card-body">
-                        <div class="owl-carousel owl-theme">
-                            <div class="carousel-item">
-                                <img src="{% static 'images/about_2.jpg' %}" alt="Highlight" class="rounded-lg w-full h-64 object-cover">
-                                <h3 class="text-xl font-bold mt-2 text-teal-700">World Cup Championship</h3>
-                                <p class="text-gray-700">May 20th 2025</p>
-                                <p class="text-gray-700">Exciting matches and moments!</p>
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{% static 'images/img_2.jpg' %}" alt="Highlight" class="rounded-lg w-full h-64 object-cover">
-                                <h3 class="text-xl font-bold mt-2 text-teal-700">World Cup Championship</h3>
-                                <p class="text-gray-700">May 20th 2025</p>
-                                <p class="text-gray-700">Exciting matches and moments!</p>
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{% static 'images/img_3.jpg' %}" alt="Highlight" class="rounded-lg w-full h-64 object-cover">
-                                <h3 class="text-xl font-bold mt-2 text-teal-700">World Cup Championship</h3>
-                                <p class="text-gray-700">May 20th 2025</p>
-                                <p class="text-gray-700">Exciting matches and moments!</p>
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{% static 'images/img_4.jpg' %}" alt="Highlight" class="rounded-lg w-full h-64 object-cover">
-                                <h3 class="text-xl font-bold mt-2 text-teal-700">World Cup Championship</h3>
-                                <p class="text-gray-700">May 20th 2025</p>
-                                <p class="text-gray-700">Exciting matches and moments!</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+     
         <!-- Latest Sports News Section -->
         <section class="py-12">
             <div class="container">

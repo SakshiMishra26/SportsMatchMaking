@@ -1,0 +1,18 @@
+{% include 'navbar.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Friends</h2>
+    {% if friends %}
+        <ul class="list-group">
+            {% for friend in friends %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ friend.username }}
+                    <a href="{% url 'chat:get_messages' friend.id %}" class="btn btn-success btn-sm">Chat</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no friends yet. Find some <a href="{% url 'chat:user_list' %}">here</a>!</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% include 'navbar.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Respond to Friend Request</h2>
+    <p>From: {{ request.from_user.username }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
+        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+    </form>
+</div>
+{% endblock %}

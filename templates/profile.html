@@ -164,6 +164,17 @@
                     <p><i class="fas fa-medal text-blue-400 mr-2"></i> <strong>Skill Level:</strong> {{ profile.skill_level }}</p>
                 </div>
 
+                {% if request.user != user %}
+                <a href="{% url 'chat:send_friend_request' user.id %}" class="btn btn-primary">Send Friend Request</a>
+                <a href="{% url 'chat:user_list' %}" class="btn btn-info">Find Friends</a>
+                {% if friend_requests.exists %}
+                    <a href="{% url 'chat:manage_friend_requests' %}" class="btn btn-info">Manage Friend Requests</a>
+                {% endif %}
+                {% if friends.exists %}
+                    <a href="{% url 'chat:get_messages' user.id %}" class="btn btn-success">Chat</a>
+                {% endif %}
+            {% endif %}
+
                 <!-- Buttons -->
                 <div class="text-center mt-4 space-x-3">
                     <a href="{% url 'logout' %}" class="btn px-4 py-2 text-base font-semibold rounded-full logout-btn">Logout</a>

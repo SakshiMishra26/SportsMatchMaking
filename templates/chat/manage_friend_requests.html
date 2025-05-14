@@ -1,0 +1,22 @@
+{% include 'navbar.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Friend Requests</h2>
+    {% if requests %}
+        {% for request in requests %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p>{{ request.from_user.username }} sent you a friend request.</p>
+                    <form method="post" action="{% url 'chat:respond_friend_request' request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
+                        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color:black;">No pending friend requests.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -26,6 +26,7 @@ urlpatterns = [
     # path('auth/', include('authentication.urls')),
     path('accounts/', include('accounts.urls')),
     path('', include('Team.urls')),
+    path('chat/', include('chat.urls')),
 
 
 
