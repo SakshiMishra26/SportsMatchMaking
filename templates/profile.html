@@ -146,11 +146,11 @@
                     <h2 class="font-bold text-white mb-3" style="color: #22d3ee;">👋 Welcome, {{ profile.user.username }}!</h2>
                     <p class="text-light"><i class="fas fa-envelope text-blue-400 mr-2"></i> <strong>Email:</strong> {{ user.email }}</p>
                 </div>
-
+<br><br>
                 <!-- Profile Picture -->
                 <div class="text-center mb-3">
                     {% if profile.profile_picture %}
-                        <img src="{{ profile.profile_picture.url }}" class="profile-pic" alt="Profile Image">
+                        <img src="{{ profile.profile_picture.url }}" class="profile-pic float-center" alt="Profile Image">
                     {% else %}
                         <p class="text-light">No profile picture uploaded.</p>
                     {% endif %}
@@ -159,7 +159,8 @@
                 <hr>
 
                 <!-- Profile Details -->
-                <div class="text-center text-white">
+                <div class="text-center text-white justify-content-left display: flex; flex-direction: column; align-items: center;">
+
                     <p><i class="fas fa-map-marker-alt text-blue-400 mr-2"></i> <strong>Location:</strong> {{ profile.location }}</p>
                     <p><i class="fas fa-medal text-blue-400 mr-2"></i> <strong>Skill Level:</strong> {{ profile.skill_level }}</p>
                 </div>

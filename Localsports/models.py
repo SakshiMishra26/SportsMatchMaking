@@ -68,15 +68,6 @@ class MatchRequest(models.Model):
     def __str__(self):
         return f"{self.sport_type} match at {self.location} on {self.date_time.strftime('%Y-%m-%d %H:%M')}"
 
-# class MatchNotification(models.Model):
-#     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")
-#     match = models.ForeignKey(MatchRequest, on_delete=models.CASCADE)
-#     message = models.CharField(max_length=255)
-#     is_read = models.BooleanField(default=False)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return f"Notification for {self.recipient.username}"
 
 class Notification(models.Model):
     NOTIFICATION_TYPES = [

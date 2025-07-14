@@ -1,12 +1,13 @@
 {% include 'navbar.html' %}
 {% block content %}
 <div class="container mt-5">
-    <h2>Your Friends</h2>
+    <h2 style="color:black;font-size:4rem;" align="center"><strong>Your Friends</strong></h2>
     {% if friends %}
         <ul class="list-group">
             {% for friend in friends %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ friend.username }}
+                    {% comment %} {{ friend.username }} {% endcomment %}
+                      <a href="{% url 'profile' friend.username %}" class="friend-link">{{ friend.username }}</a>
                     <a href="{% url 'chat:get_messages' friend.id %}" class="btn btn-success btn-sm">Chat</a>
                 </li>
             {% endfor %}

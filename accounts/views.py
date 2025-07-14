@@ -15,27 +15,6 @@ from django.conf import settings
 from chat.models import FriendRequest
 from django.db import models  # For Q objects
 
-# @login_required
-# def profile(request, username):
-#     user = get_object_or_404(User, username=username)
-    
-#     # Ensure the UserProfile exists
-#     profile, created = UserProfile.objects.get_or_create(user=user)
-
-#     if request.method == "POST":
-#         profile.location = request.POST.get('location', profile.location)
-#         profile.sports = request.POST.get('sports', profile.sports)
-#         profile.skill_level = request.POST.get('skill_level', profile.skill_level)
-        
-#         if 'profile_picture' in request.FILES:
-#             if profile.profile_picture:
-#                 profile.profile_picture.delete(save=False)  # Delete old image before saving new one
-#             profile.profile_picture = request.FILES['profile_picture']
-        
-#         profile.save()
-#         return redirect('profile', username=request.user.username)
-
-#     return render(request, 'profile.html', {'profile': profile, 'user': user})
 
 @login_required
 def profile(request, username):
@@ -160,39 +139,7 @@ def logout_view(request):
 
 
 
-# def register(request):
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)  # Use CustomUserCreationForm
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)  
-#             messages.success(request, "Registration successful! You can now log in.")
-#             return redirect('index')
-#         else:
-#             for field, error_list in form.errors.items():
-#                 for error in error_list:
-#                     messages.error(request, f"{field.capitalize()}: {error}")
-#     else:
-#         form = CustomUserCreationForm()
-#         print('User not created')    
-#     return render(request, 'registration.html', {'form': form})
 
-
-
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(request, username=username, password=password)
-#         if user:
-#             login(request, user)
-#             messages.success(request, "Login successful!")
-#             return redirect('index')
-#         else:
-#             messages.error(request, "Invalid username or password.")
-#     return render(request, 'registration.html')
-
-# def logout_view(request):
     logout(request)
     messages.success(request, "You have been logged out.")
     return redirect('index')

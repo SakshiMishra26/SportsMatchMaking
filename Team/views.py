@@ -9,22 +9,6 @@ from django.conf import settings
 from django.utils import timezone
 import requests
 from geopy.geocoders import Nominatim
-
-# @login_required
-# def create_team(request):
-#     if request.method == 'POST':
-#         form = TeamCreateForm(request.POST)
-#         if form.is_valid():
-#             team = form.save(commit=False)
-#             team.captain = request.user
-#             team.save()
-#             team.players.add(request.user)
-#             messages.success(request, "Team created successfully!")
-#             return redirect('team_list')
-#     else:
-#         form = TeamCreateForm()
-#     return render(request, 'teams/create_team.html', {'form': form})
-from geopy.geocoders import Nominatim
 from django.conf import settings
 
 @login_required
@@ -129,39 +113,6 @@ def manage_team(request, team_id):
         form = TeamUpdateForm(instance=team)
     return render(request, 'teams/manage_team.html', {'form': form, 'team': team})
 
-# @login_required
-# def create_tournament(request):
-#     if request.method == "POST":
-#         form = TournamentForm(request.POST)
-#         if form.is_valid():
-#             tournament = form.save(commit=False)
-#             tournament.created_by = request.user
-#             tournament.save()
-#             # Send email to creator
-#             subject = f"New Tournament Created: {tournament.name}"
-#             message = (
-#                 f"Dear {request.user.username},\n\n"
-#                 f"You have successfully created a new tournament:\n"
-#                 f"Name: {tournament.name}\n"
-#                 f"Sport Type: {tournament.sport_type}\n"
-#                 f"Location: {tournament.location}\n"
-#                 f"Start Date: {tournament.start_date}\n"
-#                 f"End Date: {tournament.end_date}\n"
-#                 f"Required Team Size: {tournament.required_team_size}\n\n"
-#                 f"Thank you for organizing this event!"
-#             )
-#             send_mail(
-#                 subject,
-#                 message,
-#                 settings.EMAIL_HOST_USER,
-#                 [request.user.email],
-#                 fail_silently=False,
-#             )
-#             messages.success(request, "Tournament created successfully!")
-#             return redirect('tournament_list')
-#     else:
-#         form = TournamentForm()
-#     return render(request, "tournaments/create_tournament.html", {"form": form})
 
 @login_required
 def create_tournament(request):

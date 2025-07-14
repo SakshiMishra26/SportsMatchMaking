@@ -6,6 +6,8 @@ from .forms import MatchRequestForm, MatchSearchForm
 from django.utils import timezone
 import requests
 from django.contrib import messages
+from geopy.geocoders import Nominatim
+from django.conf import settings
 
 def index(request):
     today = timezone.now().date()
@@ -30,68 +32,12 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-# @login_required
-# def create_match_request(request):
-#     if request.method == 'POST':
-#         form = MatchRequestForm(request.POST)
-#         if form.is_valid():
-#             match = form.save(commit=False)
-#             match.user = request.user
-#             match.save()
-#             Notification.objects.create(
-#                 recipient=request.user,
-#                 notification_type='match',
-#                 related_id=match.id,
-#                 message=f"You have successfully created a {match.sport_type} match at {match.location}!"
-#             )
-#             messages.success(request, "Match request created successfully!")
-#             return redirect('match_list')
-#     else:
-#         form = MatchRequestForm()
-#     return render(request, 'matches/create_match.html', {'form': form})
-
-# def match_list(request):
-#     today = timezone.now()
-#     # Separate upcoming and past matches
-#     upcoming_matches = MatchRequest.objects.filter(date_time__gt=today)
-#     past_matches = MatchRequest.objects.filter(date_time__lte=today)
-
-#     form = MatchSearchForm(request.GET)
-#     if form.is_valid():
-#         sport_type = form.cleaned_data.get('sport_type')
-#         location = form.cleaned_data.get('location')
-#         date = form.cleaned_data.get('date')
-#         skill_level = form.cleaned_data.get('skill_level')
-#         min_players_needed = form.cleaned_data.get('min_players_needed')
-#         if sport_type:
-#             upcoming_matches = upcoming_matches.filter(sport_type=sport_type)
-#             past_matches = past_matches.filter(sport_type=sport_type)
-#         if location:
-#             upcoming_matches = upcoming_matches.filter(location__icontains=location)
-#             past_matches = past_matches.filter(location__icontains=location)
-#         if date:
-#             upcoming_matches = upcoming_matches.filter(date_time__date=date)
-#             past_matches = past_matches.filter(date_time__date=date)
-#         if skill_level:
-#             upcoming_matches = upcoming_matches.filter(skill_level=skill_level)
-#             past_matches = past_matches.filter(skill_level=skill_level)
-#         if min_players_needed is not None:
-#             upcoming_matches = upcoming_matches.filter(players_needed__gte=min_players_needed)
-#             past_matches = past_matches.filter(players_needed__gte=min_players_needed)
-
-#     return render(request, 'matches/match_list.html', {
-#         'upcoming_matches': upcoming_matches,
-#         'past_matches': past_matches,
-#         'form': form
-#     })
 
 
 
 
 
 
-from geopy.geocoders import Nominatim
-from django.conf import settings
 
 
 @login_required
@@ -134,6 +80,7 @@ def create_match_request(request):
     return render(request, 'matches/create_match.html', {
         'form': form,
     })
+
 def match_list(request):
     today = timezone.now()
     upcoming_matches = MatchRequest.objects.filter(date_time__gt=today)

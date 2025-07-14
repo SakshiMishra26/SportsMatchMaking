@@ -1,7 +1,7 @@
 {% include 'navbar.html' %}
 {% block content %}
 <div class="container mt-5">
-    <h2>Respond to Friend Request</h2>
+    <h2 style="color:black;font-size:4rem;" align="center"><strong>Respond to Friends Requests</strong></h2>
     <p>From: {{ request.from_user.username }}</p>
     <form method="post">
         {% csrf_token %}
